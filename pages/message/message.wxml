@@ -1,0 +1,159 @@
+<!--pages/message/message.wxml-->
+<view class="page-container">
+  <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+
+  <!-- 顶部搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input-wrap {{searchFocused ? 'focused' : ''}}">
+      <text class="search-icon">🔍</text>
+      <input 
+        class="search-input" 
+        placeholder="搜索你想要的服务~" 
+        placeholder-class="search-placeholder" 
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+        confirm-type="search"
+        bindconfirm="onSearchConfirm"
+        bindfocus="onSearchFocus"
+        bindblur="onSearchBlur"
+      />
+      <view class="search-clear" wx:if="{{searchKeyword}}" bindtap="clearSearch">
+        <text>✕</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 搜索结果 -->
+  <block wx:if="{{searchKeyword}}">
+    <scroll-view class="search-result" scroll-y>
+      <view class="result-header">
+        <text class="result-count">🎯 找到 {{searchResults.length}} 个相关服务</text>
+      </view>
+      
+      <block wx:if="{{searchResults.length > 0}}">
+        <view class="service-list">
+          <view 
+            class="service-item {{touchedId === item.id ? 'touched' : ''}}" 
+            wx:for="{{searchResults}}" 
+            wx:key="id"
+            data-service="{{item}}"
+            data-id="{{item.id}}"
+            bindtap="onServiceTap"
+            bindtouchstart="onTouchStart"
+            bindtouchend="onTouchEnd"
+          >
+            <view class="service-img-wrap">
+              <image class="service-img" src="{{item.image}}" mode="aspectFill"></image>
+              <view class="service-tag" style="background: {{item.tagColor}};">{{item.tag}}</view>
+            </view>
+            <view class="service-info">
+              <view class="service-name">{{item.name}}</view>
+              <view class="service-desc">{{item.desc}}</view>
+              <view class="service-bottom">
+                <view class="service-price">
+                  <text class="price-symbol">¥</text>
+                  <text class="price-num">{{item.price}}</text>
+                  <text class="price-unit">起</text>
+                </view>
+                <view class="service-btn">
+                  <text>立即下单</text>
+                  <text class="btn-arrow">→</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </block>
+
+      <!-- 搜索空状态 -->
+      <view wx:else class="search-empty">
+        <view class="empty-icon">🔍</view>
+        <view class="empty-text">未找到相关服务</view>
+        <view class="empty-desc">换个关键词试试吧~</view>
+        <view class="empty-tags">
+          <text class="empty-tag" bindtap="quickSearch" data-word="护航">护航</text>
+          <text class="empty-tag" bindtap="quickSearch" data-word="陪玩">陪玩</text>
+          <text class="empty-tag" bindtap="quickSearch" data-word="提升">提升</text>
+        </view>
+      </view>
+
+      <view style="height: 40rpx;"></view>
+    </scroll-view>
+  </block>
+
+  <!-- 正常分类浏览 -->
+  <block wx:else>
+    <!-- 主体内容 -->
+    <view class="main-content">
+      <!-- 左侧分类导航 -->
+      <scroll-view class="left-nav" scroll-y>
+        <view 
+          class="nav-item {{activeNav === index ? 'active' : ''}}" 
+          wx:for="{{categories}}" 
+          wx:key="id"
+          data-index="{{index}}"
+          bindtap="switchNav"
+        >
+          <view class="nav-indicator" wx:if="{{activeNav === index}}"></view>
+          <text class="nav-icon">{{item.icon}}</text>
+          <text class="nav-text">{{item.name}}</text>
+        </view>
+      </scroll-view>
+
+      <!-- 右侧内容区 -->
+      <scroll-view class="right-content" scroll-y>
+        <!-- 分类标题 -->
+        <view class="category-header">
+          <view class="category-title-row">
+            <text class="category-title">{{categories[activeNav].name}}</text>
+            <view class="title-decor"></view>
+          </view>
+          <text class="category-sub">共 {{categories[activeNav].services.length}} 款精选服务</text>
+        </view>
+
+        <!-- 服务列表 -->
+        <view class="service-list">
+          <view 
+            class="service-item {{touchedId === item.id ? 'touched' : ''}}" 
+            wx:for="{{categories[activeNav].services}}" 
+            wx:key="id"
+            data-service="{{item}}"
+            data-id="{{item.id}}"
+            bindtap="onServiceTap"
+            bindtouchstart="onTouchStart"
+            bindtouchend="onTouchEnd"
+          >
+            <view class="service-img-wrap">
+              <image class="service-img" src="{{item.image}}" mode="aspectFill"></image>
+              <view class="service-tag" style="background: {{item.tagColor}};">
+                <text class="tag-dot">●</text>
+                {{item.tag}}
+              </view>
+              <view class="img-mask"></view>
+            </view>
+            <view class="service-info">
+              <view class="service-name">{{item.name}}</view>
+              <view class="service-desc">{{item.desc}}</view>
+              <view class="service-bottom">
+                <view class="service-price">
+                  <text class="price-symbol">¥</text>
+                  <text class="price-num">{{item.price}}</text>
+                  <text class="price-unit">起</text>
+                </view>
+                <view class="service-btn">
+                  <text>立即下单</text>
+                  <text class="btn-arrow">→</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <view style="height: 40rpx;"></view>
+      </scroll-view>
+    </view>
+  </block>
+
+  <!-- 底部留白 -->
+  <view style="height: 120rpx;"></view>
+</view>

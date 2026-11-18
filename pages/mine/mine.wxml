@@ -1,0 +1,541 @@
+<!--pages/mine/mine.wxml-->
+<view class="page-container">
+  <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+
+  <!-- ============= 普通用户版 ============= -->
+  <block wx:if="{{userType !== 1}}">
+    <!-- 顶部用户信息区 -->
+    <view class="user-header">
+      <view class="header-bg"></view>
+      <view class="user-info" bindtap="onLoginTap">
+        <view class="avatar-box">
+          <image wx:if="{{isLogin && userInfo.avatarUrl}}" class="avatar-img" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
+          <view wx:else class="avatar-default">👤</view>
+        </view>
+        <view class="user-detail">
+          <view class="user-name">{{userInfo.nickName}}</view>
+          <view wx:if="{{isLogin}}" class="user-uid">UID: {{userInfo.userId}}</view>
+          <view wx:else class="user-tip">登录后享受更多服务</view>
+        </view>
+        <view wx:if="{{isLogin}}" class="user-arrow">›</view>
+      </view>
+
+      <!-- 退出登录 -->
+      <view wx:if="{{isLogin}}" class="logout-btn" catchtap="onLogout">退出登录</view>
+    </view>
+
+    <!-- 数据统计 -->
+    <view class="stats-card">
+      <view class="stat-item">
+        <view class="stat-num">{{stats.orderCount}}</view>
+        <view class="stat-label">总订单</view>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <view class="stat-num">¥{{stats.totalSpent}}</view>
+        <view class="stat-label">累计消费</view>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <view class="stat-num">{{stats.completedCount}}</view>
+        <view class="stat-label">已完成</view>
+      </view>
+    </view>
+
+    <!-- 我的订单 -->
+    <view class="section-card">
+      <view class="section-header">
+        <text class="section-title">我的订单</text>
+        <text class="section-more" bindtap="onAllOrdersTap">全部订单 ›</text>
+      </view>
+      <view class="order-types">
+        <view 
+          class="order-type-item" 
+          wx:for="{{orderTypes}}" 
+          wx:key="id"
+          data-id="{{item.id}}"
+          bindtap="onOrderTypeTap"
+        >
+          <view class="order-type-icon">{{item.icon}}</view>
+          <view class="order-type-text">{{item.text}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 工具菜单 -->
+    <view class="section-card">
+      <view class="section-header">
+        <text class="section-title">常用工具</text>
+      </view>
+      <view class="menu-list">
+        <view 
+          class="menu-item" 
+          wx:for="{{menuList}}" 
+          wx:key="id"
+          data-id="{{item.id}}"
+          bindtap="onMenuTap"
+        >
+          <view class="menu-icon">{{item.icon}}</view>
+          <view class="menu-content">
+            <view class="menu-text">{{item.text}}</view>
+            <view class="menu-desc">{{item.desc}}</view>
+          </view>
+          <view class="menu-arrow">›</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 设置菜单 -->
+    <view class="section-card">
+      <view class="section-header">
+        <text class="section-title">其他</text>
+      </view>
+      <view class="menu-list">
+        <view 
+          class="menu-item" 
+          wx:for="{{settingList}}" 
+          wx:key="id"
+          data-id="{{item.id}}"
+          bindtap="onSettingTap"
+        >
+          <view class="menu-icon">{{item.icon}}</view>
+          <view class="menu-content">
+            <view class="menu-text">{{item.text}}</view>
+          </view>
+          <view class="menu-arrow">›</view>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- ============= 护航版 ============= -->
+  <block wx:else>
+    <!-- 收益详情视图（点击累计收益后显示） -->
+    <block wx:if="{{showEarningsDetail}}">
+      <!-- 顶部导航 -->
+      <view class="earnings-nav">
+        <view class="nav-close" bindtap="closeEarningsDetail">✕</view>
+        <text class="nav-title">我的收益</text>
+        <view class="nav-kefu" bindtap="onContactKefu">
+          <text class="kefu-icon">📞</text>
+        </view>
+      </view>
+
+      <!-- 顶部钱包卡片 -->
+      <view class="earnings-wallet-card">
+        <view class="wallet-row">
+          <view class="wallet-col">
+            <text class="wallet-label">可提现</text>
+            <text class="wallet-value">{{escortWallet.available}}</text>
+          </view>
+          <view class="wallet-col">
+            <text class="wallet-label">等待打款</text>
+            <text class="wallet-value">0</text>
+          </view>
+          <view class="wallet-col">
+            <text class="wallet-label">在途单</text>
+            <text class="wallet-value">0</text>
+          </view>
+        </view>
+        <view class="wallet-row">
+          <view class="wallet-col">
+            <text class="wallet-label">冻结保证金</text>
+            <text class="wallet-value">0</text>
+          </view>
+          <view class="wallet-col">
+            <text class="wallet-label">累计提现金额</text>
+            <text class="wallet-value">{{escortWallet.totalWithdraw}}</text>
+          </view>
+          <view class="wallet-col">
+            <text class="wallet-label">提现门槛</text>
+            <text class="wallet-value">--</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 接单收益概况 -->
+      <view class="earnings-stats-card">
+        <view class="stats-title-row">
+          <view class="title-bar red"></view>
+          <text class="stats-title">接单收益概况</text>
+        </view>
+        <view class="stats-grid">
+          <view class="stats-col">
+            <text class="stats-label">今日收益</text>
+            <text class="stats-value">{{earningsData.todayEarn}}</text>
+          </view>
+          <view class="stats-col">
+            <text class="stats-label">昨日收益</text>
+            <text class="stats-value">{{earningsData.yesterdayEarn}}</text>
+          </view>
+          <view class="stats-col">
+            <text class="stats-label">本月收益</text>
+            <text class="stats-value">{{earningsData.monthEarn}}</text>
+          </view>
+          <view class="stats-col">
+            <text class="stats-label">累计收益</text>
+            <text class="stats-value">{{earningsData.totalEarn}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 接单概况 -->
+      <view class="earnings-stats-card">
+        <view class="stats-title-row">
+          <view class="title-bar gold"></view>
+          <text class="stats-title">接单概况</text>
+        </view>
+        <view class="stats-grid">
+          <view class="stats-col">
+            <text class="stats-label">今日接单</text>
+            <text class="stats-value">{{earningsData.todayCount}}</text>
+          </view>
+          <view class="stats-col">
+            <text class="stats-label">昨日接单</text>
+            <text class="stats-value">{{earningsData.yesterdayCount}}</text>
+          </view>
+          <view class="stats-col">
+            <text class="stats-label">本月接单</text>
+            <text class="stats-value">{{earningsData.monthCount}}</text>
+          </view>
+          <view class="stats-col">
+            <text class="stats-label">累计接单</text>
+            <text class="stats-value">{{earningsData.totalCount}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 组队接单概况 -->
+      <view class="earnings-stats-card">
+        <view class="stats-title-row">
+          <view class="title-bar blue"></view>
+          <text class="stats-title blue">组队接单概况</text>
+        </view>
+        <view class="stats-grid">
+          <view class="stats-col">
+            <text class="stats-label">今日组队数</text>
+            <text class="stats-value">0</text>
+          </view>
+          <view class="stats-col">
+            <text class="stats-label">昨日组队数</text>
+            <text class="stats-value">0</text>
+          </view>
+          <view class="stats-col">
+            <text class="stats-label">本月组队数</text>
+            <text class="stats-value">0</text>
+          </view>
+          <view class="stats-col">
+            <text class="stats-label">累计组队数</text>
+            <text class="stats-value">0</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- Tab切换 -->
+      <view class="earnings-tab-header">
+        <view class="tab-item {{earningsTab === 0 ? 'active' : ''}}" bindtap="switchEarningsTab" data-id="0">接单情况</view>
+        <view class="tab-item {{earningsTab === 1 ? 'active' : ''}}" bindtap="switchEarningsTab" data-id="1">结算记录</view>
+        <view class="tab-item {{earningsTab === 2 ? 'active' : ''}}" bindtap="switchEarningsTab" data-id="2">余额流水</view>
+      </view>
+
+      <!-- 搜索框（接单情况时显示） -->
+      <view wx:if="{{earningsTab === 0}}" class="earnings-search-bar">
+        <view class="search-input-wrap">
+          <text class="search-icon">🔍</text>
+          <input class="search-input" placeholder="搜索订单号" value="{{searchKeyword}}" bindinput="onSearchInput" confirm-type="search" bindconfirm="onSearchOrder" />
+        </view>
+        <view class="search-btn" bindtap="onSearchOrder">搜索</view>
+      </view>
+
+      <!-- 接单情况列表 -->
+      <view wx:if="{{earningsTab === 0}}" class="earnings-list">
+        <view class="list-count">共{{earningsOrderList.length}}条记录</view>
+        <view wx:if="{{earningsOrderList.length === 0}}" class="empty-tip">
+          <text>暂无订单记录</text>
+        </view>
+        <view wx:else>
+          <view class="earn-order-card" wx:for="{{earningsOrderList}}" wx:key="orderId">
+            <view class="order-top-row">
+              <view class="order-no-wrap">
+                <text class="order-no">订单号：{{item.orderId}}</text>
+                <text class="copy-icon" data-text="{{item.orderId}}" bindtap="onCopyText">📋</text>
+              </view>
+              <view class="order-status-tag status-{{item.status}}">{{item.statusText}}</view>
+            </view>
+            <view class="order-time-row">
+              <text class="order-time">{{item.completeTimeText || item.createTimeText}}</text>
+              <text class="order-qty">下单数量：{{item.quantity || 1}}</text>
+            </view>
+
+            <view class="service-row">
+              <image class="service-img" src="{{item.serviceImage || '/images/logo.png'}}" mode="aspectFill"></image>
+              <view class="service-info">
+                <view class="service-name">{{item.serviceName}}</view>
+                <view class="service-desc">{{item.serviceDesc}}</view>
+                <view class="service-price">¥{{item.totalPrice}}</view>
+              </view>
+            </view>
+
+            <view class="game-info-box">
+              <view class="game-row">
+                <text class="game-label">购买数量：</text>
+                <text class="game-value">{{item.quantity || 1}}</text>
+              </view>
+              <view class="game-row">
+                <text class="game-label">游戏昵称：</text>
+                <text class="game-value">{{item.gameNickname || '未填写'}}</text>
+                <text class="copy-icon small" data-text="{{item.gameNickname}}" bindtap="onCopyText">📋</text>
+              </view>
+              <view class="game-row">
+                <text class="game-label">大区：</text>
+                <text class="game-value">{{item.region || '未填写'}}</text>
+                <text class="copy-icon small" data-text="{{item.region}}" bindtap="onCopyText">📋</text>
+              </view>
+              <view class="game-row">
+                <text class="game-label">游戏ID：</text>
+                <text class="game-value">{{item.gameId || '未填写'}}</text>
+                <text class="copy-icon small" data-text="{{item.gameId}}" bindtap="onCopyText">📋</text>
+              </view>
+            </view>
+
+            <view class="user-row-item">
+              <text class="user-label">购买人：</text>
+              <text class="user-avatar-icon">👤</text>
+              <text class="user-name-text">{{item.userName || '用户'}}</text>
+            </view>
+
+            <view class="user-row-item leader">
+              <text class="user-label">接单成员：</text>
+              <text class="user-avatar-icon leader">🎮</text>
+              <text class="user-name-text">{{item.escortName || '护航'}}</text>
+            </view>
+
+            <view class="card-footer-btn">
+              <view class="view-screenshot">查看截图</view>
+            </view>
+          </view>
+        </view>
+        <view style="height: 40rpx;"></view>
+      </view>
+
+      <!-- 结算记录列表 -->
+      <view wx:if="{{earningsTab === 1}}" class="earnings-list">
+        <view wx:if="{{settlementList.length === 0}}" class="empty-tip">
+          <text>暂无结算记录</text>
+        </view>
+        <view wx:else>
+          <view class="settlement-card" wx:for="{{settlementList}}" wx:key="id">
+            <view class="settlement-top">
+              <text class="settlement-label">结算金额：</text>
+              <text class="settlement-amount">¥{{item.amount}}</text>
+              <view class="settlement-status status-{{item.status}}">{{item.status === 1 ? '付款完成' : '处理中'}}</view>
+            </view>
+            <view class="settlement-row">
+              <text class="settlement-label">结算时间：</text>
+              <text class="settlement-value">{{item.timeText}}</text>
+            </view>
+            <view class="settlement-row">
+              <text class="settlement-label">结账模式：</text>
+              <text class="settlement-value">{{item.mode}}</text>
+              <text class="view-receipt" bindtap="viewReceipt" data-id="{{item.id}}">查看回执单</text>
+            </view>
+          </view>
+        </view>
+        <view style="height: 40rpx;"></view>
+      </view>
+
+      <!-- 余额流水列表 -->
+      <view wx:if="{{earningsTab === 2}}" class="earnings-list">
+        <view wx:if="{{flowList.length === 0}}" class="empty-tip">
+          <text>暂无余额流水</text>
+        </view>
+        <view wx:else>
+          <view class="flow-card" wx:for="{{flowList}}" wx:key="id">
+            <view class="flow-row">
+              <text class="flow-label">订单号：</text>
+              <text class="flow-value">{{item.orderId || item.id}}</text>
+              <text wx:if="{{item.orderId}}" class="copy-icon small" data-text="{{item.orderId}}" bindtap="onCopyText">📋</text>
+            </view>
+            <view class="flow-row">
+              <text class="flow-label">商品名称：</text>
+              <text class="flow-value">{{item.title}}</text>
+            </view>
+            <view class="flow-row">
+              <text class="flow-label">{{item.type === 1 ? '收入：' : '支出：'}}</text>
+              <text class="flow-amount {{item.type === 1 ? 'income' : 'expense'}}">{{item.type === 1 ? '+' : '-'}}{{item.amount}}</text>
+            </view>
+            <view class="flow-row">
+              <text class="flow-label">变动时间：</text>
+              <text class="flow-value">{{item.timeText}}</text>
+            </view>
+          </view>
+        </view>
+        <view style="height: 40rpx;"></view>
+      </view>
+    </block>
+
+    <!-- 护航主页面（默认显示） -->
+    <block wx:else>
+      <!-- 顶部护航信息 -->
+      <view class="escort-header">
+        <view class="escort-header-bg"></view>
+        <view class="escort-top">
+          <view class="escort-close">⚙️</view>
+        </view>
+        <view class="escort-user">
+          <view class="escort-avatar">
+            <image wx:if="{{userInfo.avatarUrl}}" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
+            <text wx:else>👤</text>
+          </view>
+          <view class="escort-info">
+            <view class="escort-name-row">
+              <text class="escort-name">{{userInfo.nickName}}</text>
+              <view class="escort-badge">
+                <text class="badge-icon">🛡️</text>
+                <text class="badge-text">护航</text>
+              </view>
+            </view>
+            <view class="escort-level-row">
+              <view class="level-badge">
+                <text class="level-icon">🏆</text>
+                <text class="level-text">{{escortInfo.level}}</text>
+              </view>
+              <view class="escort-region">{{escortInfo.region}}</view>
+            </view>
+          </view>
+          <view class="escort-phone">
+            <text class="phone-icon">📞</text>
+            <view class="phone-status">
+              <text class="phone-time">在线</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 收益卡片 -->
+      <view class="wallet-card">
+        <view class="wallet-main">
+          <view class="wallet-item">
+            <view class="wallet-num">{{escortWallet.available}}</view>
+            <view class="wallet-label">可提现(元)</view>
+          </view>
+          <view class="wallet-divider"></view>
+          <view class="wallet-item" bindtap="openEarningsDetail">
+            <view class="wallet-num positive">{{escortWallet.totalEarn}}</view>
+            <view class="wallet-label">累计收益(元)</view>
+          </view>
+          <view class="withdraw-btn" bindtap="onWithdraw">提现</view>
+        </view>
+      </view>
+
+      <!-- 功能入口 -->
+      <view class="func-entries">
+        <view class="func-entry" bindtap="onAnnouncement">
+          <view class="func-left">
+            <text class="func-title">接单公告</text>
+            <text class="func-desc">{{announcementUnread > 0 ? announcementUnread + '条新公告' : '去看看'}}</text>
+          </view>
+          <view class="func-icon-box green">
+            <text class="func-icon">📋</text>
+            <view wx:if="{{announcementUnread > 0}}" class="unread-badge">{{announcementUnread > 9 ? '9+' : announcementUnread}}</view>
+          </view>
+        </view>
+        <view class="func-entry" bindtap="onVerify">
+          <view class="func-left">
+            <text class="func-title">接单验证</text>
+            <text class="func-desc">滑块</text>
+          </view>
+          <view class="func-icon-box orange">
+            <text class="func-icon">✋</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 数据中心 -->
+      <view class="data-section">
+        <view class="data-title">数据中心</view>
+        <view class="data-grid">
+          <view class="data-item">
+            <view class="data-num">{{escortStats.pending}}</view>
+            <view class="data-label">未接单</view>
+          </view>
+          <view class="data-item">
+            <view class="data-num">{{escortStats.inService}}</view>
+            <view class="data-label">服务中</view>
+          </view>
+          <view class="data-item">
+            <view class="data-num">{{escortStats.todayCompleted}}</view>
+            <view class="data-label">今日已接</view>
+          </view>
+          <view class="data-item">
+            <view class="data-num">{{escortStats.todayJoined}}</view>
+            <view class="data-label">今日参与</view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 我的工具 -->
+      <view class="tools-section">
+        <view class="tools-title">我的工具</view>
+        <view class="tools-grid">
+          <view class="tool-item" bindtap="onServiceOrders">
+            <view class="tool-icon">📋</view>
+            <view class="tool-text">服务订单</view>
+            <view class="tool-badge" wx:if="{{escortStats.inService > 0}}">{{escortStats.inService}}</view>
+          </view>
+          <view class="tool-item" bindtap="onGrabHall">
+            <view class="tool-icon">🏠</view>
+            <view class="tool-text">抢单大厅</view>
+          </view>
+          <view class="tool-item" bindtap="onEscortProfile">
+            <view class="tool-icon">👤</view>
+            <view class="tool-text">我的资料</view>
+          </view>
+          <view class="tool-item" bindtap="onEscortMessage">
+            <view class="tool-icon">💬</view>
+            <view class="tool-text">我的消息</view>
+          </view>
+          <view class="tool-item" bindtap="onComplaint">
+            <view class="tool-icon">🎯</view>
+            <view class="tool-text">投诉记录</view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 退出登录 -->
+      <view class="escort-logout" catchtap="onLogout">退出登录</view>
+    </block>
+  </block>
+
+  <!-- 底部信息 -->
+  <view class="footer-info">
+    <view class="footer-text">驴火电竞 · 专业护航平台</view>
+    <view class="footer-version">版本 1.0.0</view>
+  </view>
+
+  <!-- 底部留白 -->
+  <view style="height: 140rpx;"></view>
+
+  <!-- 登录弹窗 -->
+  <view wx:if="{{showLoginModal}}" class="login-modal-mask" catchtap="closeLoginModal">
+    <view class="login-modal" catchtap="stopPropagation">
+      <view class="login-title">用户登录</view>
+      <view class="login-avatar-row">
+        <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+          <image wx:if="{{loginAvatar}}" class="avatar-preview" src="{{loginAvatar}}"></image>
+          <view wx:else class="avatar-placeholder">
+            <text class="avatar-icon">📷</text>
+            <text class="avatar-text">选择头像</text>
+          </view>
+        </button>
+      </view>
+      <view class="login-nickname-row">
+        <input class="nickname-input" type="nickname" placeholder="请输入昵称" value="{{loginNickname}}" bindinput="onNicknameInput" maxlength="20" />
+      </view>
+      <view class="login-btn-row">
+        <view class="login-cancel-btn" bindtap="closeLoginModal">取消</view>
+        <view class="login-confirm-btn" bindtap="confirmLogin">登录</view>
+      </view>
+    </view>
+  </view>
+</view>

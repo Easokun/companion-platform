@@ -1,0 +1,230 @@
+/* pages/join/join.wxss */
+.page-container {
+  min-height: 100vh;
+  background: #F5F5F7;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.status-bar {
+  width: 100%;
+}
+
+/* 顶部横幅 */
+.hero-banner {
+  margin: 30rpx;
+  padding: 60rpx 40rpx;
+  background: linear-gradient(135deg, #7B61FF, #A78BFA);
+  border-radius: 24rpx;
+  text-align: center;
+}
+
+.hero-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+}
+
+.hero-title {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #FFFFFF;
+  margin-bottom: 12rpx;
+}
+
+.hero-desc {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* 优势列表 */
+.advantage-list {
+  margin: 0 30rpx;
+  padding: 0 32rpx;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+.advantage-item {
+  display: flex;
+  align-items: center;
+  padding: 28rpx 0;
+  border-bottom: 1rpx solid #F0F0F0;
+}
+
+.advantage-item:last-child {
+  border-bottom: none;
+}
+
+.advantage-icon {
+  font-size: 48rpx;
+  margin-right: 24rpx;
+  width: 72rpx;
+  text-align: center;
+}
+
+.advantage-info {
+  flex: 1;
+}
+
+.advantage-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #1A1A1A;
+  margin-bottom: 6rpx;
+}
+
+.advantage-desc {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+/* 申请状态 */
+.status-card {
+  display: flex;
+  align-items: center;
+  margin: 30rpx;
+  padding: 32rpx;
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  border-left: 8rpx solid #7B61FF;
+}
+
+.status-card.status-pending {
+  border-left-color: #FBBF24;
+}
+
+.status-card.status-success {
+  border-left-color: #10B981;
+}
+
+.status-card.status-rejected {
+  border-left-color: #EF4444;
+}
+
+.status-card.status-revoked {
+  border-left-color: #F97316;
+}
+
+.status-icon {
+  font-size: 48rpx;
+  margin-right: 24rpx;
+}
+
+.status-info {
+  flex: 1;
+}
+
+.status-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #1A1A1A;
+  margin-bottom: 8rpx;
+}
+
+.status-desc {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+/* 封禁提示卡片 */
+.ban-card {
+  display: flex;
+  align-items: center;
+  margin: 30rpx;
+  padding: 32rpx;
+  background: #FEF2F2;
+  border-radius: 20rpx;
+  border: 1rpx solid #FECACA;
+}
+
+.ban-icon {
+  font-size: 48rpx;
+  margin-right: 24rpx;
+}
+
+.ban-info {
+  flex: 1;
+}
+
+.ban-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #DC2626;
+  margin-bottom: 8rpx;
+}
+
+.ban-desc {
+  font-size: 24rpx;
+  color: #EF4444;
+  margin-bottom: 6rpx;
+}
+
+.ban-time {
+  font-size: 22rpx;
+  color: #F87171;
+}
+
+/* 操作区 */
+.action-area {
+  margin: 30rpx;
+}
+
+/* 申请按钮 */
+.apply-btn {
+  padding: 28rpx 0;
+  background: linear-gradient(135deg, #7B61FF, #A78BFA);
+  border-radius: 50rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #FFFFFF;
+  text-align: center;
+  box-shadow: 0 4rpx 20rpx rgba(123, 97, 255, 0.4);
+}
+
+.apply-btn:active {
+  opacity: 0.9;
+  transform: scale(0.98);
+}
+
+.apply-btn.disabled {
+  background: #D1D5DB;
+  box-shadow: none;
+  color: #9CA3AF;
+}
+
+/* 取消按钮 */
+.cancel-btn {
+  padding: 28rpx 0;
+  background: #FFFFFF;
+  border: 2rpx solid #FECACA;
+  border-radius: 50rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #EF4444;
+  text-align: center;
+}
+
+.cancel-btn:active {
+  background: #FEF2F2;
+  transform: scale(0.98);
+}
+
+/* 警告提示 */
+.warn-tip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 30rpx;
+  padding: 16rpx 24rpx;
+  background: #FFFBEB;
+  border-radius: 12rpx;
+  font-size: 22rpx;
+}
+
+.warn-icon {
+  margin-right: 8rpx;
+}
+
+.warn-text {
+  color: #D97706;
+}

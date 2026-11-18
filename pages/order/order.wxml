@@ -1,0 +1,100 @@
+<!--pages/order/order.wxml-->
+<view class="page-container">
+  <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+
+  <!-- 顶部标题（未选服务时显示） -->
+  <view wx:if="{{!selectedService}}" class="nav-bar">
+    <view class="nav-back" bindtap="goBack">‹</view>
+    <text class="nav-title">确认订单</text>
+  </view>
+
+  <!-- 如果没有选中服务，显示服务选择列表 -->
+  <view wx:if="{{!selectedService}}">
+    <view class="select-header">
+      <text class="select-title">请选择服务类型</text>
+      <text class="select-subtitle">选择一项服务开始下单</text>
+    </view>
+
+    <view class="service-select-list">
+      <view 
+        class="service-select-card" 
+        wx:for="{{serviceList}}" 
+        wx:key="id"
+        data-index="{{index}}"
+        bindtap="onSelectService"
+      >
+        <view class="ssc-left">
+          <view class="ssc-tag" style="background: {{item.tagColor}};">{{item.tag}}</view>
+          <view class="ssc-name">{{item.name}}</view>
+          <view class="ssc-desc">{{item.desc}}</view>
+        </view>
+        <view class="ssc-right">
+          <view class="ssc-icon">{{item.icon}}</view>
+          <view class="ssc-price">
+            <text class="ssc-price-symbol">¥</text>
+            <text class="ssc-price-num">{{item.price}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 有选中服务时，显示服务详情 -->
+  <view wx:else class="order-content">
+    <!-- 顶部大图横幅 -->
+    <view class="hero-banner">
+      <image class="hero-image" src="{{selectedService.image}}" mode="aspectFill"></image>
+      <view class="hero-overlay"></view>
+      <view class="hero-nav">
+        <view class="hero-back" bindtap="goBack">‹</view>
+      </view>
+    </view>
+
+    <!-- 价格栏（含标签、名称、价格） -->
+    <view class="price-bar">
+      <view class="price-bar-left">
+        <view class="bar-tag" style="background: {{selectedService.tagColor || 'linear-gradient(90deg, #7B61FF, #A78BFA)'}};">{{selectedService.tag}}</view>
+        <view class="bar-name">{{selectedService.name}}</view>
+        <view class="bar-desc">{{selectedService.desc}}</view>
+        <view class="bar-price">
+          <text class="bar-symbol">¥</text>
+          <text class="bar-num">{{selectedService.price}}</text>
+        </view>
+      </view>
+      <view class="change-service-btn" bindtap="onChangeService">重新选择</view>
+    </view>
+
+    <!-- 介绍 -->
+    <view class="intro-section">
+      <view class="intro-title">介绍</view>
+      <view class="intro-content">
+        <text>请耐心等待接单，有问题随时联系客服。</text>
+      </view>
+    </view>
+
+    <!-- 底部提交栏 -->
+    <view class="submit-bar">
+      <view class="submit-actions-left">
+        <view class="submit-action-btn" bindtap="onContactKefu">
+          <text class="submit-action-icon">💬</text>
+          <text class="submit-action-text">客服</text>
+        </view>
+        <view class="submit-action-btn" bindtap="onFavoriteService">
+          <text class="submit-action-icon">{{isFavorited ? '⭐' : '☆'}}</text>
+          <text class="submit-action-text">收藏</text>
+        </view>
+      </view>
+      <view class="submit-left">
+        <text class="submit-total-label">总计：</text>
+        <view class="submit-total-price">
+          <text class="submit-symbol">¥</text>
+          <text class="submit-num">{{selectedService.price}}</text>
+        </view>
+      </view>
+      <view class="submit-btn" bindtap="onSubmit">立即下单</view>
+    </view>
+
+    <!-- 底部留白 -->
+    <view style="height: 140rpx;"></view>
+  </view>
+</view>

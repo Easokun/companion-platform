@@ -1,0 +1,57 @@
+<!--pages/feedback/feedback.wxml-->
+<view class="page-container">
+  <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+
+  <!-- 导航栏 -->
+  <view class="nav-bar">
+    <view class="nav-back" bindtap="goBack">‹</view>
+    <text class="nav-title">意见反馈</text>
+    <view style="width: 60rpx;"></view>
+  </view>
+
+  <!-- 反馈类型 -->
+  <view class="section-card">
+    <view class="section-title">反馈类型</view>
+    <view class="type-list">
+      <view 
+        class="type-item {{feedbackType === index ? 'active' : ''}}" 
+        wx:for="{{typeOptions}}" 
+        wx:key="index"
+        data-index="{{index}}"
+        bindtap="onTypeTap"
+      >
+        {{item}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 反馈内容 -->
+  <view class="section-card">
+    <view class="section-title">反馈内容</view>
+    <textarea 
+      class="feedback-input" 
+      placeholder="请详细描述您的问题或建议..." 
+      value="{{content}}" 
+      bindinput="onContentInput"
+      maxlength="500"
+      auto-height
+    />
+    <view class="char-count">{{content.length}}/500</view>
+  </view>
+
+  <!-- 联系方式 -->
+  <view class="section-card">
+    <view class="section-title">联系方式（选填）</view>
+    <input 
+      class="contact-input" 
+      placeholder="手机号/微信号，方便我们联系您" 
+      value="{{contact}}" 
+      bindinput="onContactInput"
+    />
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="submit-section">
+    <view class="submit-btn" bindtap="submitFeedback">提交反馈</view>
+  </view>
+</view>

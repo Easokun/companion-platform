@@ -1,0 +1,122 @@
+<!--pages/index/index.wxml-->
+<view class="page-container">
+  <!-- 状态栏占位 -->
+  <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+
+  <!-- 顶部公告条 -->
+  <view class="notice-bar">
+    <view class="notice-icon">🔔</view>
+    <view class="notice-scroll">
+      <view class="notice-text" animation="{{noticeAnimation}}">
+        {{noticeText}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 轮播图 -->
+  <view class="banner-section" wx:if="{{banners.length > 0}}">
+    <swiper class="banner-swiper" indicator-dots autoplay circular interval="3000" duration="500"
+            indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#fff">
+      <swiper-item wx:for="{{banners}}" wx:key="id" bindtap="onBannerTap" data-link="{{item.linkUrl}}">
+        <image class="banner-image" src="{{item.imageUrl}}" mode="aspectFill"></image>
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <!-- Logo 区域 -->
+  <view class="logo-section">
+    <view class="logo-box">
+      <image class="logo-img" src="/images/logo.png" mode="aspectFill"></image>
+    </view>
+    <view class="logo-title">驴火电竞</view>
+    <view class="logo-subtitle">专业护航 · 安全高效 · 极速提升</view>
+  </view>
+
+  <!-- 功能按钮区 -->
+  <view class="feature-grid">
+    <view class="feature-item" bindtap="onFeatureTap" data-type="service">
+      <view class="feature-icon" style="background: linear-gradient(135deg, #FF6B6B, #FF8E8E);">💬</view>
+      <text class="feature-name">人工客服</text>
+    </view>
+    <view class="feature-item" bindtap="onFeatureTap" data-type="guide">
+      <view class="feature-icon" style="background: linear-gradient(135deg, #4ECDC4, #6EE7DE);">📋</view>
+      <text class="feature-name">下单必看</text>
+    </view>
+    <view class="feature-item" bindtap="onFeatureTap" data-type="flow">
+      <view class="feature-icon" style="background: linear-gradient(135deg, #A78BFA, #C4B5FD);">🔄</view>
+      <text class="feature-name">购买流程</text>
+    </view>
+    <view class="feature-item" bindtap="onFeatureTap" data-type="join">
+      <view class="feature-icon" style="background: linear-gradient(135deg, #FBBF24, #9bee27);">⭐</view>
+      <text class="feature-name">考核入驻</text>
+    </view>
+  </view>
+
+  <!-- 火热标签区 -->
+  <view class="hot-tags-section">
+    <view class="hot-title-bar">
+      <view class="hot-title-line"></view>
+      <text class="hot-title-icon">🔥</text>
+      <text class="hot-title-text">火热护航</text>
+      <text class="hot-title-icon">🔥</text>
+      <view class="hot-title-line"></view>
+    </view>
+    <scroll-view class="hot-tags" scroll-x="true" enhanced="true" show-scrollbar="{{false}}">
+      <view 
+        class="hot-tag {{activeTagIndex === index ? 'active' : ''}}" 
+        wx:for="{{hotTags}}" 
+        wx:key="index"
+        data-index="{{index}}"
+        bindtap="onTagTap"
+      >
+        {{item.name}}
+      </view>
+    </scroll-view>
+  </view>
+
+  <view class="service-grid" wx:if="{{hotTags.length > 0 && hotTags[activeTagIndex] && hotTags[activeTagIndex].services}}">
+    <view 
+      class="service-card {{activeCard === index ? 'active' : ''}}" 
+      wx:for="{{hotTags[activeTagIndex].services}}" 
+      wx:key="id"
+      bindtap="onServiceTap"
+      data-index="{{index}}"
+      bindtouchstart="onCardTouchStart"
+      bindtouchend="onCardTouchEnd"
+    >
+      <view class="card-image-box">
+        <image class="card-image" src="{{item.image}}" mode="aspectFill"></image>
+        <view class="card-tag" style="background: {{item.tagColor}};">{{item.tag}}</view>
+      </view>
+      <view class="card-info">
+        <view class="card-name">{{item.name}}</view>
+        <view class="card-desc">{{item.desc}}</view>
+        <view class="card-price">
+          <text class="card-price-symbol">¥</text>
+          <text class="card-price-num">{{item.price}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部留白，防止被遮挡 -->
+  <view class="bottom-space"></view>
+
+  <!-- 功能弹窗 -->
+  <view wx:if="{{showFeatureModal}}" class="feature-modal-mask" bindtap="closeFeatureModal">
+    <view class="feature-modal" catchtap="stopModalPropagation">
+      <view class="feature-modal-header">
+        <text class="feature-modal-title">{{featureModalTitle}}</text>
+        <view class="feature-modal-close" bindtap="closeFeatureModal">✕</view>
+      </view>
+      <view class="feature-modal-body">
+        <block wx:if="{{featureModalType === 'image'}}">
+          <image class="feature-modal-image" src="{{featureModalImage}}" mode="aspectFit"></image>
+        </block>
+        <block wx:else>
+          <view class="feature-modal-text">{{featureModalContent}}</view>
+        </block>
+      </view>
+    </view>
+  </view>
+</view>

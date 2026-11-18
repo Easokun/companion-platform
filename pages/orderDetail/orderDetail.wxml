@@ -1,0 +1,190 @@
+<!--pages/orderDetail/orderDetail.wxml-->
+<view class="page-container">
+  <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+
+  <!-- 导航栏 -->
+  <view class="nav-bar">
+    <view class="nav-back" bindtap="goBack">‹</view>
+    <text class="nav-title">订单详情</text>
+    <view style="width: 60rpx;"></view>
+  </view>
+
+  <block wx:if="{{order}}">
+    <!-- 订单状态 -->
+    <view class="status-card status-card-{{order.status}}">
+      <view class="status-icon">{{order.status === 7 ? '💳' : order.status === 0 ? '⏳' : order.status === 1 ? '🎮' : order.status === 2 ? '✅' : order.status === 3 ? '🔄' : order.status === 4 ? '❌' : order.status === 5 ? '🎯' : order.status === 6 ? '📷' : '❓'}}</view>
+      <view class="status-text">{{order.statusText}}</view>
+      <view class="status-desc" wx:if="{{order.status === 6}}">护航已提交完成申请，等待您确认完成</view>
+    </view>
+
+    <!-- 护航退单提示 -->
+    <view class="cancel-notice" wx:if="{{order.hasEscortCancelled && order.status === 0}}">
+      <view class="cancel-notice-title">⚠️ 护航已退单</view>
+      <view class="cancel-notice-reason" wx:if="{{order.escortCancelReason}}">退单原因：{{order.escortCancelReason}}</view>
+      <view class="cancel-notice-desc">订单已重新放回抢单大厅，将为您匹配新的护航</view>
+    </view>
+
+    <!-- 服务信息 -->
+    <view class="detail-card">
+      <view class="card-title">服务信息</view>
+      <view class="detail-row">
+        <text class="detail-label">服务名称</text>
+        <text class="detail-value">{{order.serviceName}}</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-label">服务描述</text>
+        <text class="detail-value">{{order.serviceDesc}}</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-label">服务单价</text>
+        <text class="detail-value">¥{{order.price}}</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-label">购买数量</text>
+        <text class="detail-value">× {{order.quantity}}</text>
+      </view>
+    </view>
+
+    <!-- 游戏账号 -->
+    <view class="detail-card" wx:if="{{order.gameId}}">
+      <view class="card-title">游戏账号</view>
+      <view class="detail-row" wx:if="{{order.region}}">
+        <text class="detail-label">游戏大区</text>
+        <text class="detail-value">{{order.region}}</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-label">游戏ID</text>
+        <text class="detail-value">{{order.gameId}}</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-label">游戏昵称</text>
+        <text class="detail-value">{{order.gameNickname}}</text>
+      </view>
+    </view>
+
+    <!-- 护航信息（接单后显示，需 escortProfile 存在才渲染） -->
+    <view class="detail-card" wx:if="{{order.escortId && order.escortProfile && (order.status === 1 || order.status === 2 || order.status === 5 || order.status === 6)}}">
+      <view class="card-title">护航信息</view>
+      <view class="escort-info">
+        <image class="escort-avatar" src="{{order.escortProfile.avatar || '/images/logo.png'}}" mode="aspectFill"></image>
+        <view class="escort-detail">
+          <view class="escort-name">{{order.escortProfile.nickname || order.escortName || '护航'}}</view>
+          <view class="escort-meta" wx:if="{{order.escortProfile.mainGame || order.escortProfile.game || order.escortProfile.gameLevel || order.escortProfile.level}}">
+            <text wx:if="{{order.escortProfile.mainGame || order.escortProfile.game}}">{{order.escortProfile.mainGame || order.escortProfile.game}}</text>
+            <text wx:if="{{order.escortProfile.gameLevel || order.escortProfile.level}}"> · {{order.escortProfile.gameLevel || order.escortProfile.level}}</text>
+          </view>
+          <view class="escort-meta" wx:else>
+            <text>ID: {{order.escortId}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="escort-intro" wx:if="{{order.escortProfile.bio || order.escortProfile.intro}}">
+        <text class="intro-label">个人简介</text>
+        <text class="intro-text">{{order.escortProfile.bio || order.escortProfile.intro}}</text>
+      </view>
+      <view class="escort-extra">
+        <view class="extra-item" wx:if="{{order.escortProfile.gender}}">
+          <text class="extra-label">性别</text>
+          <text class="extra-value">{{order.escortProfile.gender}}</text>
+        </view>
+        <view class="extra-item" wx:if="{{order.escortProfile.age}}">
+          <text class="extra-label">年龄</text>
+          <text class="extra-value">{{order.escortProfile.age}}岁</text>
+        </view>
+        <view class="extra-item" wx:if="{{order.escortProfile.city}}">
+          <text class="extra-label">城市</text>
+          <text class="extra-value">{{order.escortProfile.city}}</text>
+        </view>
+        <view class="extra-item" wx:if="{{order.escortProfile.availableTime}}">
+          <text class="extra-label">可接单时间</text>
+          <text class="extra-value">{{order.escortProfile.availableTime}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 订单备注 -->
+    <view class="detail-card" wx:if="{{order.remark}}">
+      <view class="card-title">订单备注</view>
+      <view class="remark-text">{{order.remark}}</view>
+    </view>
+
+    <!-- 费用明细 -->
+    <view class="detail-card">
+      <view class="card-title">费用明细</view>
+      <view class="detail-row">
+        <text class="detail-label">服务费用</text>
+        <text class="detail-value">¥{{order.price}} × {{order.quantity}}</text>
+      </view>
+      <view class="detail-row total-row">
+        <text class="detail-label">合计</text>
+        <view class="total-price">
+          <text class="total-symbol">¥</text>
+          <text class="total-num">{{order.totalPrice}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 订单信息 -->
+    <view class="detail-card">
+      <view class="card-title">订单信息</view>
+      <view class="detail-row">
+        <text class="detail-label">订单编号</text>
+        <text class="detail-value order-id-text">{{order.orderId}}</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-label">下单时间</text>
+        <text class="detail-value">{{order.createTimeText}}</text>
+      </view>
+    </view>
+
+    <!-- 底部操作 -->
+    <view class="bottom-bar">
+      <button class="bottom-btn-kefu" open-type="contact">
+        <text class="kefu-icon">💬</text>
+        <text class="kefu-text">联系客服</text>
+      </button>
+      <view wx:if="{{order.status === 7}}" class="bottom-btn-cancel" bindtap="onCancelOrder">取消订单</view>
+      <view wx:if="{{order.status === 7}}" class="bottom-btn-confirm" bindtap="onPayNow">去支付</view>
+      <view wx:if="{{order.status === 0}}" class="bottom-btn-cancel" bindtap="onCancelOrder">取消订单</view>
+      <view wx:if="{{order.status === 6}}" class="bottom-btn-confirm" bindtap="onConfirmComplete">确认完成</view>
+    </view>
+
+    <view style="height: 140rpx;"></view>
+  </block>
+</view>
+
+<!-- 支付方式选择弹窗 -->
+<view class="pay-mask {{showPayPopup ? 'show' : ''}}" bindtap="closePayPopup">
+  <view class="pay-popup" catchtap="noop">
+    <view class="pay-popup-header">
+      <text class="pay-popup-title">选择支付方式</text>
+      <view class="pay-popup-close" bindtap="closePayPopup">×</view>
+    </view>
+    <view class="pay-popup-amount">
+      <text class="pay-popup-amount-label">需支付</text>
+      <text class="pay-popup-amount-val">¥{{order.totalPrice}}</text>
+    </view>
+    <view class="pay-method-list">
+      <view class="pay-method-item" bindtap="onChooseWalletPay">
+        <view class="pay-method-left">
+          <view class="pay-method-icon wallet">💰</view>
+          <view class="pay-method-info">
+            <text class="pay-method-name">钱包余额</text>
+            <text class="pay-method-desc">余额 ¥{{walletBalance}}</text>
+          </view>
+        </view>
+        <text class="pay-method-arrow">›</text>
+      </view>
+      <view class="pay-method-item" bindtap="onChooseWechatPay">
+        <view class="pay-method-left">
+          <view class="pay-method-icon wechat">💚</view>
+          <view class="pay-method-info">
+            <text class="pay-method-name">余额不足？去充值</text>
+            <text class="pay-method-desc">点击前往钱包充值</text>
+          </view>
+        </view>
+        <text class="pay-method-arrow">›</text>
+      </view>
+    </view>
+  </view>
+</view>

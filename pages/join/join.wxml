@@ -1,0 +1,101 @@
+<!--pages/join/join.wxml-->
+<view class="page-container">
+  <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+
+  <!-- 顶部横幅 -->
+  <view class="hero-banner">
+    <view class="hero-content">
+      <view class="hero-icon">🎮</view>
+      <view class="hero-title">成为护航</view>
+      <view class="hero-desc">加入专业团队，用技术赚取收益</view>
+    </view>
+  </view>
+
+  <!-- 优势介绍 -->
+  <view class="advantage-list">
+    <view class="advantage-item">
+      <view class="advantage-icon">💰</view>
+      <view class="advantage-info">
+        <view class="advantage-title">高额收益</view>
+        <view class="advantage-desc">自由接单，收入上不封顶</view>
+      </view>
+    </view>
+    <view class="advantage-item">
+      <view class="advantage-icon">⏰</view>
+      <view class="advantage-info">
+        <view class="advantage-title">时间自由</view>
+        <view class="advantage-desc">随时随地接单，灵活安排</view>
+      </view>
+    </view>
+    <view class="advantage-item">
+      <view class="advantage-icon">🛡️</view>
+      <view class="advantage-info">
+        <view class="advantage-title">平台保障</view>
+        <view class="advantage-desc">安全保障，费用透明</view>
+      </view>
+    </view>
+    <view class="advantage-item">
+      <view class="advantage-icon">🏆</view>
+      <view class="advantage-info">
+        <view class="advantage-title">认证护航</view>
+        <view class="advantage-desc">通过考核获认证，优先派单</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 封禁提示 -->
+  <view wx:if="{{banInfo.banned}}" class="ban-card">
+    <view class="ban-icon">🚫</view>
+    <view class="ban-info">
+      <view class="ban-title">暂无法申请</view>
+      <view class="ban-desc">{{banInfo.reason}}</view>
+      <view class="ban-time">解封时间：{{banInfo.banEndTime}}</view>
+    </view>
+  </view>
+
+  <!-- 申请状态 -->
+  <view wx:if="{{applyStatus !== null && applyStatus !== 'banned'}}" class="status-card {{applyStatus === 1 ? 'status-success' : applyStatus === 0 ? 'status-pending' : applyStatus === 2 ? 'status-rejected' : 'status-revoked'}}">
+    <view class="status-icon">
+      {{applyStatus === 0 ? '⏳' : applyStatus === 1 ? '✅' : applyStatus === 2 ? '❌' : applyStatus === 3 ? '📤' : applyStatus === 4 ? '🚫' : '📤'}}
+    </view>
+    <view class="status-info">
+      <view class="status-title">申请状态：{{applyStatusText}}</view>
+      <view class="status-desc" wx:if="{{applyStatus === 0}}">我们将在1-3个工作日内完成审核</view>
+      <view class="status-desc" wx:if="{{applyStatus === 1}}">恭喜您已成为认证护航，可开始接单</view>
+      <view class="status-desc" wx:if="{{applyStatus === 2}}">审核未通过，您可以重新提交申请</view>
+      <view class="status-desc" wx:if="{{applyStatus === 3}}">已取消申请，您可以重新提交</view>
+      <view class="status-desc" wx:if="{{applyStatus === 4}}">资格已被撤销，您可以重新申请</view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-area">
+    <!-- 审核中：显示取消申请 -->
+    <block wx:if="{{applyStatus === 0}}">
+      <view class="cancel-btn" bindtap="onCancelApply">取消申请</view>
+    </block>
+
+    <!-- 已通过：显示去接单 -->
+    <block wx:elif="{{applyStatus === 1}}">
+      <view class="apply-btn" bindtap="onApplyTap">去抢单</view>
+    </block>
+
+    <!-- 封禁：禁用按钮 -->
+    <block wx:elif="{{banInfo.banned}}">
+      <view class="apply-btn disabled">暂无法申请</view>
+    </block>
+
+    <!-- 其他状态（未申请/已拒绝/已取消）：显示立即申请 -->
+    <block wx:else>
+      <view class="apply-btn" bindtap="onApplyTap">立即申请</view>
+    </block>
+  </view>
+
+  <!-- 提示 -->
+  <view wx:if="{{!banInfo.banned && banInfo.count > 0}}" class="warn-tip">
+    <text class="warn-icon">⚠️</text>
+    <text class="warn-text">30天内已取消/被拒 {{banInfo.count}} 次，达到3次将封禁30天</text>
+  </view>
+
+  <view style="height: 80rpx;"></view>
+</view>

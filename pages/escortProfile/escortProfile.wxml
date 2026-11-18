@@ -1,0 +1,209 @@
+<!--pages/escortProfile/escortProfile.wxml-->
+<view class="page-container">
+  <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+
+  <!-- 顶部导航 -->
+  <view class="nav-bar">
+    <view class="nav-content">
+      <view class="nav-back" bindtap="goBack">‹</view>
+      <text class="nav-title">护航资料</text>
+      <view style="width: 100rpx;"></view>
+    </view>
+  </view>
+
+  <scroll-view class="content-scroll" scroll-y>
+    <!-- 审核中提示 -->
+    <view class="audit-tip" wx:if="{{auditStatus && auditStatus.status === 0}}">
+      <text class="tip-icon">⏳</text>
+      <text class="tip-text">资料审核中，请耐心等待</text>
+    </view>
+
+    <!-- 头像昵称区 -->
+    <view class="profile-header">
+      <view class="avatar-wrap" bindtap="chooseAvatar">
+        <image class="avatar-img" src="{{formData.avatar || '/images/logo.png'}}" mode="aspectFill"></image>
+        <view class="avatar-edit">
+          <text>✏️</text>
+        </view>
+      </view>
+      <view class="header-info">
+        <view class="nickname-input">
+          <input 
+            class="nickname-text" 
+            placeholder="请输入护航昵称" 
+            placeholder-class="nickname-placeholder"
+            value="{{formData.nickname}}"
+            data-field="nickname"
+            bindinput="onInput"
+          />
+        </view>
+        <view class="header-sub">
+          <text>{{formData.mainGame}} · {{formData.gameLevel || '未设置段位'}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 基础信息 -->
+    <view class="section-card">
+      <view class="section-title">
+        <view class="title-bar"></view>
+        <text>基础信息</text>
+      </view>
+      <view class="form-list">
+        <view class="form-item">
+          <text class="form-label">性别</text>
+          <radio-group class="radio-group" bindchange="onGenderChange">
+            <label class="radio-label">
+              <radio value="男" color="#7B61FF" checked="{{formData.gender === '男'}}"/>男
+            </label>
+            <label class="radio-label">
+              <radio value="女" color="#7B61FF" checked="{{formData.gender === '女'}}"/>女
+            </label>
+          </radio-group>
+        </view>
+        <view class="form-item">
+          <text class="form-label">年龄</text>
+          <input 
+            class="form-input" 
+            type="number"
+            placeholder="请输入年龄" 
+            value="{{formData.age}}"
+            data-field="age"
+            bindinput="onInput"
+          />
+        </view>
+        <view class="form-item">
+          <text class="form-label">所在城市</text>
+          <input 
+            class="form-input" 
+            placeholder="请输入所在城市" 
+            value="{{formData.city}}"
+            data-field="city"
+            bindinput="onInput"
+          />
+        </view>
+        <view class="form-item intro-item">
+          <text class="form-label">个人简介</text>
+          <textarea 
+            class="form-textarea" 
+            placeholder="介绍一下自己，让老板更了解你~" 
+            value="{{formData.intro}}"
+            data-field="intro"
+            bindinput="onInput"
+            maxlength="200"
+          />
+          <text class="word-count">{{formData.intro.length}}/200</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 游戏信息 -->
+    <view class="section-card">
+      <view class="section-title">
+        <view class="title-bar"></view>
+        <text>游戏信息</text>
+      </view>
+      <view class="form-list">
+        <view class="form-item">
+          <text class="form-label">主玩游戏</text>
+          <picker mode="selector" range="{{gameOptions}}" bindchange="onGameChange">
+            <view class="picker-box">
+              <text class="picker-text">{{formData.mainGame}}</text>
+              <text class="picker-arrow">›</text>
+            </view>
+          </picker>
+        </view>
+        <view class="form-item">
+          <text class="form-label">游戏ID</text>
+          <input 
+            class="form-input" 
+            placeholder="请输入游戏ID" 
+            value="{{formData.gameId}}"
+            data-field="gameId"
+            bindinput="onInput"
+          />
+        </view>
+        <view class="form-item">
+          <text class="form-label">游戏段位</text>
+          <input 
+            class="form-input" 
+            placeholder="如：暗区传说" 
+            value="{{formData.gameLevel}}"
+            data-field="gameLevel"
+            bindinput="onInput"
+          />
+        </view>
+        <view class="form-item">
+          <text class="form-label">游戏大区</text>
+          <text class="form-value">{{formData.gameRegion}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 服务信息 -->
+    <view class="section-card">
+      <view class="section-title">
+        <view class="title-bar"></view>
+        <text>服务信息</text>
+      </view>
+      <view class="form-list">
+        <view class="form-item service-item">
+          <text class="form-label">服务类型</text>
+          <view class="service-tags">
+            <view 
+              class="service-tag {{item.checked ? 'active' : ''}}" 
+              wx:for="{{serviceOptions}}" 
+              wx:key="id"
+              data-id="{{item.id}}"
+              bindtap="onServiceToggle"
+            >
+              {{item.name}}
+            </view>
+          </view>
+        </view>
+        <view class="form-item">
+          <text class="form-label">可接单时间</text>
+          <picker mode="selector" range="{{timeOptions}}" value="{{selectedTimeIndex}}" bindchange="onTimeChange">
+            <view class="picker-box">
+              <text class="picker-text">{{timeOptions[selectedTimeIndex]}}</text>
+              <text class="picker-arrow">›</text>
+            </view>
+          </picker>
+        </view>
+      </view>
+    </view>
+
+    <!-- 游戏水平截图 -->
+    <view class="section-card">
+      <view class="section-title">
+        <view class="title-bar"></view>
+        <text>游戏水平截图</text>
+        <text class="section-tip">最多{{photoMax}}张</text>
+      </view>
+      <view class="photo-grid">
+        <view 
+          class="photo-item" 
+          wx:for="{{formData.photoAlbum}}" 
+          wx:key="*this"
+          data-url="{{item}}"
+          data-index="{{index}}"
+          bindtap="previewPhoto"
+        >
+          <image class="photo-img" src="{{item}}" mode="aspectFill"></image>
+          <view class="photo-delete" data-index="{{index}}" catchtap="deleteAlbumPhoto">✕</view>
+        </view>
+        <view class="photo-add" wx:if="{{formData.photoAlbum.length < photoMax}}" bindtap="chooseAlbumPhoto">
+          <text class="add-icon">+</text>
+          <text class="add-text">上传</text>
+        </view>
+      </view>
+    </view>
+
+    <view style="height: 160rpx;"></view>
+  </scroll-view>
+
+  <!-- 底部提交按钮 -->
+  <view class="bottom-bar">
+    <view class="submit-btn" bindtap="submitAudit">提交审核</view>
+  </view>
+</view>

@@ -1,0 +1,284 @@
+<!--pages/escortOrderDetail/escortOrderDetail.wxml-->
+<view class="page-container">
+  <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+
+  <!-- 顶部导航 -->
+  <view class="nav-bar">
+    <view class="nav-close" bindtap="goBack">✕</view>
+    <text class="nav-title">组队信息</text>
+    <view class="nav-kefu" bindtap="onContactKefu">
+      <text class="kefu-icon">📞</text>
+    </view>
+  </view>
+
+  <!-- Tab切换 -->
+  <view class="tab-header">
+    <view class="tab-item {{activeTab === 0 ? 'active' : ''}}" bindtap="switchTab" data-id="0">我的队伍</view>
+    <view class="tab-item {{activeTab === 1 ? 'active' : ''}}" bindtap="switchTab" data-id="1">参与的队伍</view>
+  </view>
+
+  <view wx:if="{{order}}" class="content">
+    <!-- 订单号和状态 -->
+    <view class="order-top">
+      <view class="order-no-row">
+        <text class="order-no-label">订单号：</text>
+        <text class="order-no-value">{{order.orderId}}</text>
+        <text class="copy-icon" data-text="{{order.orderId}}" bindtap="onCopy">📋</text>
+      </view>
+      <view class="order-time-row">
+        <text class="order-time-label">下单时间：</text>
+        <text class="order-time-value">{{createTimeText}}</text>
+      </view>
+      <view class="order-status-tag">{{order.statusText}}</view>
+    </view>
+
+    <!-- 服务信息 -->
+    <view class="service-card">
+      <image class="service-img" src="{{order.serviceImage || '/images/logo.png'}}" mode="aspectFill"></image>
+      <view class="service-info">
+        <view class="service-name">{{order.serviceName}}</view>
+        <view class="service-price">
+          <text class="price-symbol">¥</text>
+          <text class="price-num">{{order.totalPrice}}</text>
+        </view>
+        <view class="commission-row">
+          <text class="commission-label">佣金价格</text>
+          <text class="commission-price">¥{{earnPrice}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 游戏信息 -->
+    <view class="game-info-card">
+      <view class="game-row">
+        <view class="game-item">
+          <text class="game-label">购买数量：{{order.quantity || 1}}</text>
+        </view>
+        <view class="game-item">
+          <text class="game-label">游戏昵称：{{order.gameNickname}}</text>
+          <text class="copy-small" data-text="{{order.gameNickname}}" bindtap="onCopy">📋</text>
+        </view>
+      </view>
+      <view class="game-row">
+        <view class="game-item">
+          <text class="game-label">大区：{{order.region}}</text>
+          <text class="copy-small" data-text="{{order.region}}" bindtap="onCopy">📋</text>
+        </view>
+        <view class="game-item">
+          <text class="game-label">游戏ID：{{order.gameId}}</text>
+          <text class="copy-small" data-text="{{order.gameId}}" bindtap="onCopy">📋</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 购买人 -->
+    <view class="user-card">
+      <text class="user-label">购买人：</text>
+      <text class="user-avatar">👤</text>
+      <text class="user-name">{{order.userName || '用户'}}</text>
+    </view>
+
+    <!-- 队长（护航自己） -->
+    <view class="user-card leader-card">
+      <text class="user-label leader-label">队长：</text>
+      <text class="user-avatar leader-avatar">🎮</text>
+      <text class="user-name">{{escortName}}</text>
+    </view>
+
+    <!-- 队伍成员 -->
+    <view wx:if="{{teamMembers.length > 0}}" class="team-section">
+      <view class="team-header">
+        <text class="team-title">队伍成员（{{teamCount}}人平分佣金）</text>
+      </view>
+      <view class="team-list">
+        <view wx:for="{{teamMembers}}" wx:key="openid" class="team-member-item">
+          <image class="member-avatar" src="{{item.avatar || '/images/logo.png'}}" mode="aspectFill"></image>
+          <text class="member-name">{{item.nickName}}</text>
+          <text class="member-role">受邀护航</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 备注 -->
+    <view class="remark-card">
+      <text class="remark-label">备注：{{order.remark || '无'}}</text>
+      <text class="copy-small" data-text="{{order.remark || '无'}}" bindtap="onCopy">📋</text>
+    </view>
+
+    <view style="height: 140rpx;"></view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-bar">
+    <view wx:if="{{order && order.status === 1}}" class="btn-group">
+      <view class="btn-refund" bindtap="showRefundModal">退单</view>
+      <view class="btn-invite" bindtap="onInvite">邀请好友</view>
+      <view class="btn-start" bindtap="onStartService">开始服务</view>
+    </view>
+    <view wx:if="{{order && order.status === 5}}" class="btn-group">
+      <view class="btn-refund" bindtap="showRefundModal">退单</view>
+      <view class="btn-invite" bindtap="onInvite">邀请好友</view>
+      <view class="btn-complete {{canComplete ? '' : 'disabled'}}" bindtap="onComplete">
+        <text wx:if="{{canComplete}}">完成服务</text>
+        <text wx:else>{{countdownText}}</text>
+      </view>
+    </view>
+    <!-- 待确认状态 -->
+    <view wx:if="{{order && order.status === 6}}" class="btn-group">
+      <view class="btn-pending">
+        <text class="pending-icon">⏳</text>
+        <text class="pending-text">等待确认</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 退单弹窗 -->
+  <view wx:if="{{showRefund}}" class="modal-mask" bindtap="hideRefundModal">
+    <view class="modal-content" catchtap="stopPropagation">
+      <view class="modal-handle"></view>
+      <view class="modal-close" bindtap="hideRefundModal">✕</view>
+      <view class="modal-title">退单</view>
+
+      <view class="refund-warning">
+        <view class="warning-title">提交后将按规则处理罚款与记录</view>
+        <view class="warning-desc">请填写真实原因，避免审核退回。</view>
+      </view>
+
+      <view class="form-section">
+        <view class="form-row">
+          <text class="form-label">退单说明</text>
+          <text class="form-required">必填，最多20字</text>
+        </view>
+        <input 
+          class="form-input" 
+          placeholder="请输入退单说明" 
+          value="{{refundReason}}" 
+          bindinput="onRefundReasonInput"
+          maxlength="20"
+        />
+      </view>
+
+      <view class="form-section">
+        <view class="form-row">
+          <text class="form-label">炸单次数</text>
+          <text class="form-hint">默认 0 次</text>
+        </view>
+        <view class="counter-row">
+          <view class="counter-btn {{bombCount <= 0 ? 'disabled' : ''}}" bindtap="onBombMinus">−</view>
+          <text class="counter-num">{{bombCount}}</text>
+          <view class="counter-btn" bindtap="onBombPlus">+</view>
+        </view>
+      </view>
+
+      <view class="refund-rule">
+        <text class="rule-text">退单规则</text>
+        <text class="rule-tip">请确认后再提交</text>
+      </view>
+
+      <view class="modal-confirm-btn" bindtap="confirmRefund">确认退单</view>
+    </view>
+  </view>
+
+  <!-- 完成服务上传照片弹窗 -->
+  <view wx:if="{{showCompleteModal}}" class="modal-mask" bindtap="hideCompleteModal">
+    <view class="modal-content complete-modal" catchtap="stopPropagation">
+      <view class="modal-handle"></view>
+      <view class="modal-close" bindtap="hideCompleteModal">✕</view>
+      <view class="modal-title">提交完成申请</view>
+
+      <view class="complete-tip">
+        <text class="tip-title">请上传服务完成证明</text>
+        <text class="tip-desc">游戏战绩截图 + 组队合照，最多{{completePhotoMax}}张</text>
+      </view>
+
+      <view class="form-section">
+        <view class="form-row">
+          <text class="form-label">完成照片</text>
+          <text class="form-required">必填，最多{{completePhotoMax}}张</text>
+        </view>
+        <view class="photo-grid">
+          <view 
+            class="photo-item" 
+            wx:for="{{completePhotos}}" 
+            wx:key="*this"
+            data-url="{{item}}"
+            data-index="{{index}}"
+            bindtap="previewCompletePhoto"
+          >
+            <image class="photo-img" src="{{item}}" mode="aspectFill"></image>
+            <view class="photo-delete" data-index="{{index}}" catchtap="deleteCompletePhoto">✕</view>
+          </view>
+          <view class="photo-add" wx:if="{{completePhotos.length < completePhotoMax}}" bindtap="chooseCompletePhoto">
+            <text class="add-icon">+</text>
+            <text class="add-text">上传</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="form-section">
+        <view class="form-row">
+          <text class="form-label">完成备注</text>
+          <text class="form-hint">选填</text>
+        </view>
+        <textarea 
+          class="form-textarea" 
+          placeholder="简单描述一下本次服务的完成情况" 
+          value="{{completeRemark}}" 
+          bindinput="onCompleteRemarkInput"
+          maxlength="100"
+        />
+      </view>
+
+      <view class="complete-rule">
+        <text class="rule-text">提交后需等待管理员审核确认</text>
+        <text class="rule-tip">确认通过后佣金自动到账</text>
+      </view>
+
+      <view class="modal-confirm-btn complete-btn" bindtap="submitComplete">提交申请</view>
+    </view>
+  </view>
+
+  <!-- 邀请好友弹窗 -->
+  <view class="invite-mask {{showInvitePopup ? 'show' : ''}}" bindtap="closeInvitePopup">
+    <view class="invite-popup" catchtap="noop">
+      <view class="invite-header">
+        <text class="invite-title">邀请护航</text>
+        <view class="invite-close" bindtap="closeInvitePopup">×</view>
+      </view>
+      <view class="search-box">
+        <view class="search-input-wrap">
+          <text class="search-icon">🔍</text>
+          <input class="search-input" placeholder="搜索护航昵称" value="{{searchKeyword}}" bindinput="onSearchInput" confirm-type="search" />
+          <view wx:if="{{searchKeyword}}" class="search-clear" bindtap="clearSearch">×</view>
+        </view>
+      </view>
+      <view class="select-info">
+        <text class="select-text">已选 {{selectedCount}}/2 人</text>
+        <text class="select-tip">队伍：老板 + 自己 + 最多2名护航</text>
+      </view>
+      <scroll-view class="escort-scroll" scroll-y="true">
+        <view wx:if="{{escortList.length === 0}}" class="escort-empty">
+          <text>{{searchKeyword ? '未找到匹配的护航' : '暂无其他护航'}}</text>
+        </view>
+        <view wx:for="{{escortList}}" wx:key="openid" class="escort-item {{item.selected ? 'selected' : ''}}" data-index="{{index}}" bindtap="toggleSelectEscort">
+          <image class="escort-avatar" src="{{item.avatar || '/images/logo.png'}}" mode="aspectFill"></image>
+          <view class="escort-info">
+            <text class="escort-name">{{item.nickName}}</text>
+            <view class="escort-tags">
+              <text wx:if="{{item.level}}" class="escort-tag level">{{item.level}}</text>
+              <text wx:if="{{item.game}}" class="escort-tag game">{{item.game}}</text>
+            </view>
+          </view>
+          <view class="escort-check {{item.selected ? 'checked' : ''}}">
+            <text wx:if="{{item.selected}}">✓</text>
+          </view>
+        </view>
+      </scroll-view>
+      <view class="invite-footer">
+        <view class="invite-confirm {{selectedCount > 0 ? '' : 'disabled'}}" bindtap="confirmInvite">
+          <text>确认邀请{{selectedCount > 0 ? '（' + selectedCount + '人）' : ''}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

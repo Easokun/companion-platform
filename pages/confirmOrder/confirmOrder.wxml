@@ -1,0 +1,139 @@
+<!--pages/confirmOrder/confirmOrder.wxml-->
+<view class="page-container">
+  <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+
+  <!-- 顶部导航 -->
+  <view class="nav-bar">
+    <view class="nav-close" bindtap="onClose">✕</view>
+    <text class="nav-title">购买商品</text>
+  </view>
+
+  <!-- 商品信息卡片 -->
+  <view class="goods-card">
+    <image class="goods-image" src="{{service.image}}" mode="aspectFill"></image>
+    <view class="goods-info">
+      <view class="goods-name">{{service.name}}</view>
+      <view class="goods-desc">{{service.desc}}（注：T7、大金、保底都必须打够且T7不算大...）</view>
+      <view class="goods-price">
+        <text class="price-symbol">¥</text>
+        <text class="price-num">{{service.priceText}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 购买数量 -->
+  <view class="form-row">
+    <view class="form-label">购买数量</view>
+    <view class="quantity-box">
+      <view class="qty-btn {{quantity <= 1 ? 'disabled' : ''}}" bindtap="onMinus">−</view>
+      <view class="qty-num">{{quantity}}</view>
+      <view class="qty-btn" bindtap="onPlus">+</view>
+    </view>
+  </view>
+
+  <!-- 大区选择 -->
+  <view class="form-row">
+    <view class="form-label">大区选择</view>
+    <view class="region-list">
+      <view 
+        class="region-item {{selectedRegion === index ? 'active' : ''}}"
+        wx:for="{{regions}}"
+        wx:key="*this"
+        data-index="{{index}}"
+        bindtap="onSelectRegion"
+      >{{item}}</view>
+    </view>
+  </view>
+
+  <!-- 游戏ID -->
+  <view class="form-row">
+    <view class="form-label">游戏ID</view>
+    <input 
+      class="form-input" 
+      placeholder="请输入游戏ID" 
+      placeholder-class="input-placeholder"
+      value="{{gameId}}"
+      bindinput="onGameIdInput"
+    />
+  </view>
+
+  <!-- 游戏昵称 -->
+  <view class="form-row">
+    <view class="form-label">游戏昵称</view>
+    <input 
+      class="form-input" 
+      placeholder="请输入游戏昵称" 
+      placeholder-class="input-placeholder"
+      value="{{gameNickname}}"
+      bindinput="onNicknameInput"
+    />
+  </view>
+
+  <!-- 订单备注 -->
+  <view class="form-row remark-row">
+    <view class="form-label-row">
+      <view class="form-label">订单备注</view>
+      <view class="form-label-extra">选填</view>
+    </view>
+    <textarea 
+      class="form-textarea" 
+      placeholder="请输入订单备注，如特殊要求等" 
+      placeholder-class="input-placeholder"
+      value="{{remark}}"
+      bindinput="onRemarkInput"
+    ></textarea>
+  </view>
+
+  <!-- 底部支付栏 -->
+  <view class="pay-bar">
+    <view class="pay-left">
+      <text class="pay-label">实付金额</text>
+      <view class="pay-price">
+        <text class="pay-symbol">¥</text>
+        <text class="pay-num">{{totalPrice}}</text>
+      </view>
+    </view>
+    <view class="pay-btn" bindtap="onPay">去支付</view>
+  </view>
+
+  <!-- 底部留白 -->
+  <view style="height: 140rpx;"></view>
+</view>
+
+<!-- 支付方式选择弹窗 -->
+<view class="pay-mask {{showPayPopup ? 'show' : ''}}" bindtap="closePayPopup">
+  <view class="pay-popup" catchtap="noop">
+    <view class="pay-popup-header">
+      <text class="pay-popup-title">选择支付方式</text>
+      <view class="pay-popup-close" bindtap="closePayPopup">×</view>
+    </view>
+    <view class="pay-popup-amount">
+      <text class="pay-popup-amount-label">需支付</text>
+      <text class="pay-popup-amount-val">¥{{totalPrice}}</text>
+    </view>
+    <view class="pay-method-list">
+      <!-- 钱包余额 -->
+      <view class="pay-method-item" bindtap="onChooseWalletPay">
+        <view class="pay-method-left">
+          <view class="pay-method-icon wallet">💰</view>
+          <view class="pay-method-info">
+            <text class="pay-method-name">钱包余额</text>
+            <text class="pay-method-desc">余额 ¥{{walletBalance}}</text>
+          </view>
+        </view>
+        <text class="pay-method-arrow">›</text>
+      </view>
+      <!-- 去充值 -->
+      <view class="pay-method-item" bindtap="onChooseWechatPay">
+        <view class="pay-method-left">
+          <view class="pay-method-icon wechat">💚</view>
+          <view class="pay-method-info">
+            <text class="pay-method-name">余额不足？去充值</text>
+            <text class="pay-method-desc">点击前往钱包充值</text>
+          </view>
+        </view>
+        <text class="pay-method-arrow">›</text>
+      </view>
+    </view>
+  </view>
+</view>

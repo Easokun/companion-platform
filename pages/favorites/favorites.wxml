@@ -1,0 +1,44 @@
+<!--pages/favorites/favorites.wxml-->
+<view class="page-container">
+  <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+
+  <!-- 导航栏 -->
+  <view class="nav-bar">
+    <view class="nav-back" bindtap="goBack">‹</view>
+    <text class="nav-title">我的收藏</text>
+    <view style="width: 60rpx;"></view>
+  </view>
+
+  <!-- 收藏列表 -->
+  <view class="favorites-list">
+    <block wx:if="{{favorites.length > 0}}">
+      <view 
+        class="favorite-card" 
+        wx:for="{{favorites}}" 
+        wx:key="id"
+        data-index="{{index}}"
+        bindtap="onFavoriteTap"
+      >
+        <view class="favorite-icon">{{item.icon}}</view>
+        <view class="favorite-info">
+          <view class="favorite-name">{{item.name}}</view>
+          <view class="favorite-desc">{{item.desc}}</view>
+          <view class="favorite-price">
+            <text class="price-symbol">¥</text>
+            <text class="price-num">{{item.price}}</text>
+          </view>
+        </view>
+        <view class="favorite-remove" catchtap="onRemoveFavorite" data-index="{{index}}">
+          <text class="remove-icon">✕</text>
+        </view>
+      </view>
+    </block>
+
+    <!-- 空状态 -->
+    <view wx:else class="empty-state">
+      <view class="empty-icon">⭐</view>
+      <view class="empty-text">暂无收藏</view>
+      <view class="empty-desc">在下单页点击收藏，把喜欢的服务加入这里</view>
+    </view>
+  </view>
+</view>

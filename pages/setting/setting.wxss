@@ -1,0 +1,89 @@
+/* pages/setting/setting.wxss */
+.page-container {
+  min-height: 100vh;
+  background: #F5F5F7;
+  padding-bottom: 40rpx;
+}
+
+.status-bar {
+  width: 100%;
+}
+
+/* 导航栏 */
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 30rpx;
+  background: #FFFFFF;
+}
+
+.nav-back {
+  font-size: 48rpx;
+  color: #333333;
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-title {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333333;
+}
+
+/* 卡片通用 */
+.section-card {
+  margin: 30rpx;
+  padding: 0 30rpx;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  overflow: hidden;
+}
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #1A1A1A;
+  padding: 30rpx 0 20rpx;
+}
+
+/* 设置项 */
+.setting-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30rpx 0;
+}
+
+.setting-text {
+  font-size: 28rpx;
+  color: #333333;
+}
+
+.setting-right {
+  display: flex;
+  align-items: center;
+}
+
+.setting-value {
+  font-size: 26rpx;
+  color: #999999;
+  margin-right: 12rpx;
+}
+
+.setting-arrow {
+  font-size: 32rpx;
+  color: #CCCCCC;
+}
+
+.setting-switch {
+  transform: scale(0.8);
+}
+
+.setting-divider {
+  height: 1rpx;
+  background: #F0F0F0;
+}

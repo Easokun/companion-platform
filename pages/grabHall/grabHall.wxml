@@ -1,0 +1,59 @@
+<!--pages/grabHall/grabHall.wxml-->
+<view class="page-container">
+  <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+
+  <!-- 顶部导航 -->
+  <view class="nav-bar">
+    <view class="nav-back" bindtap="goBack">‹</view>
+    <text class="nav-title">抢单大厅</text>
+    <view style="width: 60rpx;"></view>
+  </view>
+
+  <!-- 提示条 -->
+  <view class="tip-bar">
+    <text class="tip-icon">📢</text>
+    <text class="tip-text">新订单将实时刷新，请保持关注</text>
+  </view>
+
+  <view class="list-container">
+    <view wx:if="{{orders.length === 0}}" class="empty">
+      <text class="empty-icon">🎯</text>
+      <text class="empty-text">暂无可接订单</text>
+      <text class="empty-tip">请耐心等待用户下单</text>
+    </view>
+
+    <view wx:else class="order-list">
+      <view class="order-card" wx:for="{{orders}}" wx:key="orderId" data-id="{{item.orderId}}" bindtap="onOrderTap">
+        <view class="order-header">
+          <view class="order-tag">{{item.tag || '热门'}}</view>
+          <view class="order-time">{{item.createTimeText}}</view>
+        </view>
+        <view class="order-body">
+          <view class="order-name">{{item.serviceName}}</view>
+          <view class="order-desc">{{item.serviceDesc}}</view>
+        </view>
+        <view class="order-info">
+          <view class="info-item">
+            <text class="info-label">数量</text>
+            <text class="info-value">× {{item.quantity}}</text>
+          </view>
+          <view class="info-item" wx:if="{{item.region}}">
+            <text class="info-label">大区</text>
+            <text class="info-value">{{item.region}}</text>
+          </view>
+          <view class="info-item" wx:if="{{item.gameId}}">
+            <text class="info-label">ID</text>
+            <text class="info-value">{{item.gameId}}</text>
+          </view>
+        </view>
+        <view class="order-footer">
+          <view class="order-price">
+            <text class="price-symbol">¥</text>
+            <text class="price-num">{{item.totalPrice}}</text>
+          </view>
+          <view class="grab-btn" data-id="{{item.orderId}}" catchtap="onTakeOrder">立即抢单</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

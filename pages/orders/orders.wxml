@@ -1,0 +1,71 @@
+<!--pages/orders/orders.wxml-->
+<view class="page-container">
+  <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+
+  <!-- 导航栏 -->
+  <view class="nav-bar">
+    <view class="nav-back" bindtap="goBack">
+      <text class="back-icon">‹</text>
+    </view>
+    <text class="nav-title">我的订单</text>
+    <view style="width: 60rpx;"></view>
+  </view>
+
+  <!-- 状态 Tab -->
+  <view class="tabs-bar">
+    <view 
+      class="tab-item {{activeTab === index ? 'active' : ''}}" 
+      wx:for="{{tabs}}" 
+      wx:key="index"
+      data-index="{{index}}"
+      bindtap="switchTab"
+    >
+      {{item}}
+    </view>
+  </view>
+
+  <!-- 订单列表 -->
+  <view class="orders-list">
+    <block wx:if="{{displayOrders.length > 0}}">
+      <view 
+        class="order-card" 
+        wx:for="{{displayOrders}}" 
+        wx:key="orderId"
+        data-order-id="{{item.orderId}}"
+        bindtap="onOrderTap"
+      >
+        <view class="order-header">
+          <text class="order-id">订单号：{{item.orderId}}</text>
+          <text class="order-status status-{{item.status}}">{{item.statusText}}</text>
+        </view>
+        <view class="order-content">
+          <view class="order-service-name">{{item.serviceName}}</view>
+          <view class="order-service-desc">{{item.serviceDesc}}</view>
+        </view>
+        <view class="order-footer">
+          <view class="order-price">
+            <text class="order-price-symbol">¥</text>
+            <text class="order-price-num">{{item.totalPrice}}</text>
+          </view>
+          <view class="order-time">{{item.createTimeText}}</view>
+        </view>
+      </view>
+
+      <!-- 加载状态 -->
+      <view class="list-footer">
+        <view wx:if="{{loading}}" class="loading-text">加载中...</view>
+        <view wx:elif="{{!hasMore && displayOrders.length > 0}}" class="no-more-text">— 没有更多了 —</view>
+      </view>
+    </block>
+
+    <!-- 空状态 -->
+    <view wx:else class="empty-state">
+      <view class="empty-icon">📦</view>
+      <view class="empty-text">暂无相关订单</view>
+      <view class="empty-desc">快去挑选心仪的服务吧~</view>
+      <view class="empty-btn" bindtap="goHome">
+        <text>去逛逛</text>
+      </view>
+    </view>
+  </view>
+</view>

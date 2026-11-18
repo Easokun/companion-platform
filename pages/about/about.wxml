@@ -1,0 +1,49 @@
+<!--pages/about/about.wxml-->
+<view class="page-container">
+  <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+
+  <!-- 导航栏 -->
+  <view class="nav-bar">
+    <view class="nav-back" bindtap="goBack">‹</view>
+    <text class="nav-title">关于我们</text>
+    <view style="width: 60rpx;"></view>
+  </view>
+
+  <!-- Logo和名称 -->
+  <view class="about-header">
+    <image class="about-logo" src="/images/logo.png" mode="aspectFill"></image>
+    <view class="about-name">驴火电竞</view>
+    <view class="about-slogan">专业护航 · 安全高效 · 极速提升</view>
+  </view>
+
+  <!-- 公司简介 -->
+  <view class="section-card">
+    <view class="section-title">平台简介</view>
+    <view class="about-desc">
+      驴火电竞是专业的游戏护航服务平台，致力于为玩家提供优质、安全、高效的游戏陪玩服务。我们拥有专业的护航团队，严格的考核入驻机制，让每一位玩家都能享受极致的游戏体验。
+    </view>
+  </view>
+
+  <!-- 菜单列表 -->
+  <view class="section-card">
+    <view class="menu-item" bindtap="onUserAgreement">
+      <view class="menu-text">用户协议</view>
+      <view class="menu-arrow">›</view>
+    </view>
+    <view class="menu-divider"></view>
+    <view class="menu-item" bindtap="onPrivacyPolicy">
+      <view class="menu-text">隐私政策</view>
+      <view class="menu-arrow">›</view>
+    </view>
+  </view>
+
+  <!-- 版本信息 -->
+  <view class="version-info">
+    <text>版本 v{{version}}</text>
+  </view>
+
+  <!-- ICP备案信息 -->
+  <view class="icp-info" bindtap="copyICP">
+    <text>冀ICP备2026033966号</text>
+  </view>
+</view>

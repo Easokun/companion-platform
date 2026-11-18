@@ -1,0 +1,33 @@
+<!--custom-tab-bar/index.wxml-->
+<view class="tab-bar">
+  <!-- 首页 -->
+  <view class="tab-item" data-index="0" bindtap="switchTab">
+    <image class="tab-icon" src="{{selected === 0 ? list[0].activeIcon : list[0].icon}}"></image>
+    <text class="tab-text {{selected === 0 ? 'active' : ''}}">{{list[0].text}}</text>
+  </view>
+
+  <!-- 消息 -->
+  <view class="tab-item" data-index="1" bindtap="switchTab">
+    <image class="tab-icon" src="{{selected === 1 ? list[1].activeIcon : list[1].icon}}"></image>
+    <text class="tab-text {{selected === 1 ? 'active' : ''}}">{{list[1].text}}</text>
+  </view>
+
+  <!-- 中间凸起订单按钮 -->
+  <view class="tab-item center-item" bindtap="goOrder">
+    <view class="center-btn">
+      <text class="center-text">订单</text>
+    </view>
+  </view>
+
+  <!-- 成为护航 -->
+  <view class="tab-item" data-index="3" bindtap="switchTab">
+    <image class="tab-icon" src="{{selected === 3 ? list[3].activeIcon : list[3].icon}}"></image>
+    <text class="tab-text {{selected === 3 ? 'active' : ''}}">{{list[3].text}}</text>
+  </view>
+
+  <!-- 我的 -->
+  <view class="tab-item" data-index="4" bindtap="switchTab">
+    <image class="tab-icon" src="{{selected === 4 ? list[4].activeIcon : list[4].icon}}"></image>
+    <text class="tab-text {{selected === 4 ? 'active' : ''}}">{{list[4].text}}</text>
+  </view>
+</view>

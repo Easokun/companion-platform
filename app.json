@@ -1,0 +1,55 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/order/order",
+    "pages/message/message",
+    "pages/join/join",
+    "pages/mine/mine",
+    "pages/orders/orders",
+    "pages/wallet/wallet",
+    "pages/favorites/favorites",
+    "pages/invite/invite",
+    "pages/orderDetail/orderDetail",
+    "pages/joinApply/joinApply",
+    "pages/confirmOrder/confirmOrder",
+    "pages/escortProfile/escortProfile",
+    "pages/grabHall/grabHall",
+    "pages/grabDetail/grabDetail",
+    "pages/escortOrders/escortOrders",
+    "pages/escortOrderDetail/escortOrderDetail",
+    "pages/feedback/feedback",
+    "pages/about/about",
+    "pages/setting/setting",
+    "pages/announcement/announcement"
+  ],
+  "window": {
+    "navigationStyle": "custom",
+    "backgroundColor": "#FFFFFF"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#999999",
+    "selectedColor": "#7B61FF",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/message/message",
+        "text": "分类"
+      },
+      {
+        "pagePath": "pages/join/join",
+        "text": "成为护航"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json"
+}

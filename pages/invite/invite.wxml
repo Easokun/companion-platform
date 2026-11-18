@@ -1,0 +1,55 @@
+<!--pages/invite/invite.wxml-->
+<view class="page-container">
+  <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+
+  <!-- 导航栏 -->
+  <view class="nav-bar">
+    <view class="nav-back" bindtap="goBack">‹</view>
+    <text class="nav-title">邀请好友</text>
+    <view style="width: 60rpx;"></view>
+  </view>
+
+  <!-- 邀请海报区 -->
+  <view class="invite-card">
+    <view class="invite-title">🎁 邀请好友得奖励</view>
+    <view class="invite-desc">好友通过你的邀请码注册并下单，你将获得现金奖励</view>
+    <view class="invite-reward">
+      <view class="reward-item">
+        <view class="reward-num">{{inviteCount}}</view>
+        <view class="reward-label">已邀请</view>
+      </view>
+      <view class="reward-divider"></view>
+      <view class="reward-item">
+        <view class="reward-num">¥{{inviteReward}}</view>
+        <view class="reward-label">累计奖励</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 邀请码 -->
+  <view class="code-section">
+    <view class="section-title">我的邀请码</view>
+    <view class="code-box" bindtap="copyCode">
+      <text class="code-text">{{inviteCode}}</text>
+      <text class="code-tip">点击复制</text>
+    </view>
+  </view>
+
+  <!-- 分享按钮 -->
+  <view class="share-section">
+    <view class="section-title">分享给好友</view>
+    <button class="share-btn" open-type="share">
+      <text class="share-icon">💬</text>
+      <text class="share-text">微信好友</text>
+    </button>
+  </view>
+
+  <!-- 规则说明 -->
+  <view class="rule-section">
+    <view class="rule-title">奖励规则</view>
+    <view class="rule-item">1. 好友通过你的邀请码注册成功，奖励 ¥5</view>
+    <view class="rule-item">2. 好友首次下单完成，再奖励 ¥10</view>
+    <view class="rule-item">3. 奖励将直接发放至钱包余额</view>
+    <view class="rule-item">4. 严禁恶意刷量，违者封号处理</view>
+  </view>
+</view>

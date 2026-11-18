@@ -1,0 +1,199 @@
+<!--pages/grabDetail/grabDetail.wxml-->
+<view class="page-container">
+  <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+
+  <!-- 顶部导航 -->
+  <view class="nav-bar">
+    <view class="nav-back" bindtap="goBack">‹</view>
+    <text class="nav-title">订单详情</text>
+    <view class="nav-kefu" bindtap="onContactKefu">
+      <text class="kefu-icon">📞</text>
+      <text class="kefu-text">客服</text>
+    </view>
+  </view>
+
+  <view wx:if="{{order}}" class="content">
+    <!-- 服务信息 -->
+    <view class="service-card">
+      <image class="service-img" src="{{order.serviceImage || '/images/logo.png'}}" mode="aspectFill"></image>
+      <view class="service-info">
+        <view class="service-name">{{order.serviceName}}</view>
+        <view class="service-desc">{{order.serviceDesc}}</view>
+      </view>
+    </view>
+
+    <!-- 游戏信息 -->
+    <view class="info-card">
+      <view class="card-title">
+        <view class="title-bar"></view>
+        <text class="title-text">游戏信息</text>
+      </view>
+      <view class="info-list">
+        <view class="info-row">
+          <text class="info-label">游戏</text>
+          <text class="info-value">暗区突围</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">数量</text>
+          <text class="info-value">{{order.quantity || 1}}局</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">昵称</text>
+          <view class="info-value-wrap">
+            <text class="info-value">{{order.gameNickname}}</text>
+            <text class="copy-btn" data-text="{{order.gameNickname}}" bindtap="onCopy">复制</text>
+          </view>
+        </view>
+        <view class="info-row">
+          <text class="info-label">大区</text>
+          <view class="info-value-wrap">
+            <text class="info-value">{{order.region}}</text>
+            <text class="copy-btn" data-text="{{order.region}}" bindtap="onCopy">复制</text>
+          </view>
+        </view>
+        <view class="info-row">
+          <text class="info-label">游戏ID</text>
+          <view class="info-value-wrap">
+            <text class="info-value">{{order.gameId}}</text>
+            <text class="copy-btn" data-text="{{order.gameId}}" bindtap="onCopy">复制</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 队伍成员 -->
+    <view class="info-card">
+      <view class="card-title">
+        <view class="title-bar"></view>
+        <text class="title-text">队伍成员</text>
+      </view>
+      <view class="team-list">
+        <view class="team-item">
+          <view class="team-avatar boss">老</view>
+          <view class="team-info">
+            <text class="team-name">{{order.gameNickname || '老板'}}</text>
+            <text class="team-role">老板</text>
+          </view>
+        </view>
+        <view class="team-item">
+          <view class="team-avatar me">我</view>
+          <view class="team-info">
+            <text class="team-name">{{myNickName}}</text>
+            <text class="team-role">我（护航）</text>
+          </view>
+        </view>
+        <view wx:for="{{teamMembers}}" wx:key="openid" class="team-item">
+          <view class="team-avatar invited">{{item.nickName[0] || '友'}}</view>
+          <view class="team-info">
+            <text class="team-name">{{item.nickName}}</text>
+            <text class="team-role">受邀护航{{index + 1}}</text>
+          </view>
+          <view class="team-remove" data-index="{{index}}" bindtap="onRemoveMember">移除</view>
+        </view>
+        <view wx:if="{{teamMembers.length < 2}}" class="team-item add" bindtap="openInvitePopup">
+          <view class="team-avatar add-btn">+</view>
+          <view class="team-info">
+            <text class="team-name add-text">邀请好友</text>
+            <text class="team-role">最多邀请2人</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 订单备注 -->
+    <view class="info-card">
+      <view class="card-title">
+        <view class="title-bar"></view>
+        <text class="title-text">订单备注</text>
+      </view>
+      <view class="remark-box">
+        <text>{{order.remark || '无'}}</text>
+      </view>
+    </view>
+
+    <!-- 价格明细 -->
+    <view class="info-card">
+      <view class="card-title">
+        <view class="title-bar"></view>
+        <text class="title-text">价格明细</text>
+      </view>
+      <view class="price-list">
+        <view class="price-row">
+          <text class="price-label">服务价格</text>
+          <text class="price-value">¥{{order.totalPrice}}</text>
+        </view>
+        <view class="price-row total">
+          <text class="price-label">预计收入</text>
+          <text class="price-value total-price">¥{{earnPrice}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view style="height: 180rpx;"></view>
+  </view>
+
+  <!-- 底部抢单按钮 -->
+  <view class="bottom-bar">
+    <view class="invite-btn" bindtap="openInvitePopup">
+      <text class="invite-icon">👥</text>
+      <text class="invite-text">邀请好友</text>
+    </view>
+    <view class="grab-btn" bindtap="onTakeOrder">
+      <text class="btn-text">立即抢单</text>
+      <text class="btn-price">赚 ¥{{earnPrice}}</text>
+    </view>
+  </view>
+</view>
+
+<!-- 邀请好友半弹窗 -->
+<view class="invite-mask {{showInvitePopup ? 'show' : ''}}" bindtap="closeInvitePopup">
+  <view class="invite-popup" catchtap="noop">
+    <!-- 弹窗头部 -->
+    <view class="invite-header">
+      <text class="invite-title">邀请护航</text>
+      <view class="invite-close" bindtap="closeInvitePopup">×</view>
+    </view>
+
+    <!-- 搜索框 -->
+    <view class="search-box">
+      <view class="search-input-wrap">
+        <text class="search-icon">🔍</text>
+        <input class="search-input" placeholder="搜索护航昵称" value="{{searchKeyword}}" bindinput="onSearchInput" confirm-type="search" bindconfirm="onSearchConfirm" />
+        <view wx:if="{{searchKeyword}}" class="search-clear" bindtap="clearSearch">×</view>
+      </view>
+    </view>
+
+    <!-- 已选提示 -->
+    <view class="select-info">
+      <text class="select-text">已选 {{selectedCount}}/2 人</text>
+      <text class="select-tip">队伍：老板 + 自己 + 最多2名护航 = 最多4人</text>
+    </view>
+
+    <!-- 护航列表 -->
+    <scroll-view class="escort-scroll" scroll-y="true">
+      <view wx:if="{{escortList.length === 0}}" class="escort-empty">
+        <text>{{searchKeyword ? '未找到匹配的护航' : '暂无其他护航'}}</text>
+      </view>
+      <view wx:for="{{escortList}}" wx:key="openid" class="escort-item {{item.selected ? 'selected' : ''}}" data-openid="{{item.openid}}" data-index="{{index}}" bindtap="toggleSelectEscort">
+        <image class="escort-avatar" src="{{item.avatar || '/images/logo.png'}}" mode="aspectFill"></image>
+        <view class="escort-info">
+          <text class="escort-name">{{item.nickName}}</text>
+          <view class="escort-tags">
+            <text wx:if="{{item.level}}" class="escort-tag level">{{item.level}}</text>
+            <text wx:if="{{item.game}}" class="escort-tag game">{{item.game}}</text>
+          </view>
+        </view>
+        <view class="escort-check {{item.selected ? 'checked' : ''}}">
+          <text wx:if="{{item.selected}}">✓</text>
+        </view>
+      </view>
+    </scroll-view>
+
+    <!-- 底部确认 -->
+    <view class="invite-footer">
+      <view class="invite-confirm {{selectedCount > 0 ? '' : 'disabled'}}" bindtap="confirmInvite">
+        <text>确认邀请{{selectedCount > 0 ? '（' + selectedCount + '人）' : ''}}</text>
+      </view>
+    </view>
+  </view>
+</view>

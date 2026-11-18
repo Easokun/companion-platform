@@ -1,0 +1,64 @@
+<!--pages/escortOrders/escortOrders.wxml-->
+<view class="page-container">
+  <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+
+  <!-- 顶部导航 -->
+  <view class="nav-bar">
+    <view class="nav-back" bindtap="goBack">‹</view>
+    <text class="nav-title">服务订单</text>
+    <view style="width: 60rpx;"></view>
+  </view>
+
+  <!-- 筛选标签 -->
+  <view class="tab-bar">
+    <view 
+      class="tab-item {{activeTab === item.id ? 'active' : ''}}"
+      wx:for="{{tabs}}"
+      wx:key="id"
+      data-id="{{item.id}}"
+      bindtap="switchTab"
+    >{{item.text}}</view>
+  </view>
+
+  <view class="list-container">
+    <view wx:if="{{orders.length === 0}}" class="empty">
+      <text class="empty-icon">📋</text>
+      <text class="empty-text">暂无订单</text>
+    </view>
+
+    <view wx:else class="order-list">
+      <view class="order-card" wx:for="{{orders}}" wx:key="orderId" data-id="{{item.orderId}}" bindtap="onOrderTap">
+        <view class="order-header">
+          <text class="order-status status-{{item.status}}">{{item.statusText}}</text>
+          <text class="order-time">{{item.createTimeText}}</text>
+        </view>
+        <view class="order-body">
+          <view class="order-name">{{item.serviceName}}</view>
+          <view class="order-desc">{{item.serviceDesc}}</view>
+        </view>
+        <view class="order-user">
+          <view class="user-row" wx:if="{{item.gameId}}">
+            <text class="user-label">游戏ID</text>
+            <text class="user-value">{{item.gameId}}</text>
+          </view>
+          <view class="user-row" wx:if="{{item.gameNickname}}">
+            <text class="user-label">游戏昵称</text>
+            <text class="user-value">{{item.gameNickname}}</text>
+          </view>
+          <view class="user-row" wx:if="{{item.region}}">
+            <text class="user-label">游戏大区</text>
+            <text class="user-value">{{item.region}}</text>
+          </view>
+        </view>
+        <view class="order-footer">
+          <view wx:if="{{item.teamCount > 1}}" class="team-badge">👥 {{item.teamCount}}人平分</view>
+          <view class="order-price">
+            <text class="price-label">预计收入</text>
+            <text class="price-symbol">¥</text>
+            <text class="price-num">{{item.earnAmount}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,11 @@
+# .gitignore
+.env
+.env.local
+__pycache__/
+*.pyc
+*.log
+logs/
+.trae-html-share-packages/
+.uploads/
+node_modules/
+.DS_Store

@@ -1,0 +1,126 @@
+/* pages/feedback/feedback.wxss */
+.page-container {
+  min-height: 100vh;
+  background: #F5F5F7;
+  padding-bottom: 40rpx;
+}
+
+.status-bar {
+  width: 100%;
+}
+
+/* 导航栏 */
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 30rpx;
+  background: #FFFFFF;
+}
+
+.nav-back {
+  font-size: 48rpx;
+  color: #333333;
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-title {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333333;
+}
+
+/* 卡片通用 */
+.section-card {
+  margin: 30rpx;
+  padding: 30rpx;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+}
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #1A1A1A;
+  margin-bottom: 24rpx;
+}
+
+/* 反馈类型 */
+.type-list {
+  display: flex;
+  gap: 20rpx;
+}
+
+.type-item {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx 0;
+  background: #F5F5F7;
+  border-radius: 16rpx;
+  font-size: 26rpx;
+  color: #666666;
+  transition: all 0.2s;
+}
+
+.type-item.active {
+  background: linear-gradient(135deg, #7B61FF, #A78BFA);
+  color: #FFFFFF;
+  font-weight: 500;
+}
+
+/* 反馈内容输入 */
+.feedback-input {
+  width: 100%;
+  min-height: 200rpx;
+  padding: 24rpx;
+  background: #F5F5F7;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  color: #333333;
+  box-sizing: border-box;
+}
+
+.char-count {
+  text-align: right;
+  font-size: 24rpx;
+  color: #999999;
+  margin-top: 12rpx;
+}
+
+/* 联系方式 */
+.contact-input {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  padding: 0 24rpx;
+  background: #F5F5F7;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  color: #333333;
+  box-sizing: border-box;
+}
+
+/* 提交按钮 */
+.submit-section {
+  margin: 60rpx 30rpx 0;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 30rpx 0;
+  background: linear-gradient(135deg, #7B61FF, #A78BFA);
+  color: #FFFFFF;
+  font-size: 32rpx;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 50rpx;
+  box-shadow: 0 8rpx 24rpx rgba(123, 97, 255, 0.3);
+}
+
+.submit-btn:active {
+  opacity: 0.85;
+}
