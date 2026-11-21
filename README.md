@@ -2,6 +2,16 @@
 
 微信小程序 + Flask 管理后端的陪玩服务撮合平台：用户端小程序下单约伴，陪伴师端接单管理，管理后台处理财务、审核与运营，接入微信支付完成真实交易闭环。已上线运营。
 
+## 界面预览
+
+| 服务分类页 | 陪伴师资料 | 资料审核 |
+|---|---|---|
+| ![服务分类页](docs/screenshots/01-service-list.png) | ![陪伴师资料](docs/screenshots/02-escort-profile.png) | ![资料审核](docs/screenshots/03-review-detail.png) |
+
+| 钱包充值 | 订单列表 | 营收统计 | 管理后台 |
+|---|---|---|---|
+| ![钱包](docs/screenshots/04-wallet.png) | ![订单](docs/screenshots/05-orders.png) | ![营收](docs/screenshots/06-revenue.png) | ![管理后台](docs/screenshots/07-admin-orders.jpg) |
+
 ## 功能模块
 
 **小程序端（36+ 页面）**
